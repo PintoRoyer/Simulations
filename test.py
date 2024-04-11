@@ -5,7 +5,9 @@ import numpy as np
 import xarray as xr
 from matplotlib.animation import ArtistAnimation
 
-data = xr.open_mfdataset("../Données/DX250/CORSE.1.SEG01.OUT.*.nc")
+print('ouverture...')
+data = xr.open_mfdataset("../Donnees/DX250/CORSE.1.SEG01.OUT.0*.nc")
+print("ouverture terminée")
 
 fig = plt.figure()
 axes = plt.axes(projection=ccrs.PlateCarree())
