@@ -24,9 +24,9 @@ and the following methods:
 
 * get_data(file_index: int) to open a file
 
-* get_var(*varnames, func: callable = lambda *x: x) to get a variable
+* get_var(*varnames, func: callable = lambda x: x) to get a variable
 
-* get_limits(*varnames, func: callable = lambda *x: x) to get the min and max of a variable
+* get_limits(*varnames, func: callable = lambda x: x) to get the min and max of a variable
 
 Class
 -----
@@ -76,7 +76,7 @@ class MesoNH:
         """
         self.data = Dataset(self.files[file_index])
 
-    def get_var(self, *varnames, func: callable = lambda *x: x):
+    def get_var(self, *varnames, func: callable = lambda x: x):
         """
         Returns the NumPy array corresponding to result given by ``func`` applied on the given
         variables.
@@ -99,7 +99,7 @@ class MesoNH:
 
         return func(*args)
 
-    def get_limits(self, *varnames, func: callable = lambda *x: x):
+    def get_limits(self, *varnames, func: callable = lambda x: x):
         """
         Search min and max of a given variable.
 
@@ -118,8 +118,13 @@ class MesoNH:
         var_min = np.inf
         var_max = -np.inf
         for file_index in range(len(self.files)):
-            self.get_data(file_index)
-            result = self.get_var(*varnames, func=func)
+            data = Dataset(self.files[file_index])
+
+            args = []
+            for varname in varnames:
+                args.append(data.variables[varname][0])
+            result = func(*args)
+
             current_min = result.min()
             current_max = result.max()
 
@@ -172,7 +177,7 @@ class Antilope:
         """
         self.data = Dataset(self.files[file_index])
 
-    def get_var(self, *varnames, func: callable = lambda *x: x):
+    def get_var(self, *varnames, func: callable = lambda x: x):
         """
         Returns the NumPy array corresponding to result given by ``func`` applied on the given
         variables.
@@ -195,7 +200,7 @@ class Antilope:
 
         return func(*args)
 
-    def get_limits(self, *varnames, func: callable = lambda *x: x):
+    def get_limits(self, *varnames, func: callable = lambda x: x):
         """
         Search min and max of a given variable.
 
@@ -214,8 +219,13 @@ class Antilope:
         var_min = np.inf
         var_max = -np.inf
         for file_index in range(len(self.files)):
-            self.get_data(file_index)
-            result = self.get_var(*varnames, func=func)
+            data = Dataset(self.files[file_index])
+
+            args = []
+            for varname in varnames:
+                args.append(self.data.variables[varname][0])
+            result = func(*args)
+
             current_min = result.min()
             current_max = result.max()
 
@@ -268,7 +278,7 @@ class Satellite:
         """
         self.data = Dataset(self.files[file_index])
 
-    def get_var(self, *varnames, func: callable = lambda *x: x):
+    def get_var(self, *varnames, func: callable = lambda x: x):
         """
         Returns the NumPy array corresponding to result given by ``func`` applied on the given
         variables.
@@ -291,7 +301,7 @@ class Satellite:
 
         return func(*args)
 
-    def get_limits(self, *varnames, func: callable = lambda *x: x):
+    def get_limits(self, *varnames, func: callable = lambda x: x):
         """
         Search min and max of a given variable.
 
@@ -310,8 +320,13 @@ class Satellite:
         var_min = np.inf
         var_max = -np.inf
         for file_index in range(len(self.files)):
-            self.get_data(file_index)
-            result = self.get_var(*varnames, func=func)
+            data = Dataset(self.files[file_index])
+
+            args = []
+            for varname in varnames:
+                args.append(self.data.variables[varname][0])
+            result = func(*args)
+
             current_min = result.min()
             current_max = result.max()
 

@@ -15,6 +15,7 @@ Map
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Map:
@@ -30,9 +31,10 @@ class Map:
         The axes to plot the map on.
     """
 
-    def __init__(self, reader):
+    def __init__(self, longitude, latitude):
         """Constructor method."""
-        self.reader = reader
+        self.longitude = longitude
+        self.latitude = latitude
         self.axes = None
 
     def init_axes(
@@ -131,7 +133,7 @@ class Map:
         )
         return title
 
-    def plot_contourf(self, *varnames, func: callable = lambda *x: x, **kwargs):
+    def plot_contourf(self, var_array: np.array, **kwargs):
         """
         Add a contourf to the Map axes.
 
@@ -150,15 +152,15 @@ class Map:
             The added contourf.
         """
         contourf = self.axes.contourf(
-            self.reader.longitude,
-            self.reader.latitude,
-            self.reader.get_var(*varnames, func=func),
+            self.longitude,
+            self.latitude,
+            var_array,
             **kwargs
         )
 
         return contourf
 
-    def plot_contour(self, *varnames, func: callable = lambda *x: x, **kwargs):
+    def plot_contour(self, var_array: np.array, **kwargs):
         """
         Add a contour to the Map axes.
 
@@ -177,15 +179,15 @@ class Map:
             The added contour.
         """
         contour = self.axes.contour(
-            self.reader.longitude,
-            self.reader.latitude,
-            self.reader.get_var(*varnames, func=func),
+            self.longitude,
+            self.latitude,
+            var_array,
             **kwargs
         )
 
         return contour
 
-    def plot_quiver(self, *varnames, mesh: int = None, func: callable = lambda *x: x, **kwargs):
+    def plot_quiver(self, x_var_array: np.array, y_var_array: np.array, *, x_mesh: int = None, y_mesh: int = None, **kwargs):
         """
         Add a quiver to the given axes.
 
@@ -205,17 +207,19 @@ class Map:
         contourf : plt.Contourf
             The added contourf.
         """
-        size = len(self.reader.longitude)
+        x_size = len(self.longitude)
+        y_size = len(self.latitude)
+        if not x_mesh:
+            x_mesh = x_size // 50
+        if not y_mesh:
+            y_mesh = y_size // 50
 
-        if not mesh:
-            mesh = size // 50
 
-        x_var, y_var = self.reader.get_var(*varnames, func=func)
         quiver = self.axes.quiver(
-            self.reader.longitude[::mesh],
-            self.reader.latitude[::mesh],
-            x_var[::mesh, ::mesh],
-            y_var[::mesh, ::mesh],
+            self.longitude[::x_mesh],
+            self.latitude[::y_mesh],
+            x_var_array[::y_mesh, ::x_mesh],
+            y_var_array[::y_mesh, ::x_mesh],
             **kwargs
         )
 
