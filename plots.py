@@ -207,8 +207,8 @@ class Map:
         contourf : plt.Contourf
             The added contourf.
         """
-        x_size = len(self.longitude)
-        y_size = len(self.latitude)
+        x_size = len(x_var_array[0])
+        y_size = len(x_var_array[:, 0])
         if not x_mesh:
             x_mesh = x_size // 50
         if not y_mesh:
@@ -216,8 +216,8 @@ class Map:
 
 
         quiver = self.axes.quiver(
-            self.longitude[::x_mesh],
-            self.latitude[::y_mesh],
+            self.longitude[::y_mesh, ::x_mesh],
+            self.latitude[::y_mesh, ::x_mesh],
             x_var_array[::y_mesh, ::x_mesh],
             y_var_array[::y_mesh, ::x_mesh],
             **kwargs

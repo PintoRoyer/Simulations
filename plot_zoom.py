@@ -4,6 +4,9 @@ from readers import MesoNH
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
+import json
+
+import os
 
 from datetime import datetime, timedelta
 
@@ -33,105 +36,144 @@ def norm_wind(um10, vm10, wind10):
     return um10 / wind10, vm10 / wind10 
 
 
-def plot_zoom(mesonh, lon, lat, time, width):
+def plot_zoom(mesonh, i_lim, j_lim, time, width, dx):
     plt.close("all")
-    
-    # Limits
-    lon_index = []
-    lat_index = []
- 
-    for lim in lon:
-        index = get_index(mesonh.longitude, lim)
-        lon_index.append(index)
-        
-    for lim in lat:
-        index = get_index(mesonh.latitude, lim)
-        lat_index.append(index)
 
     # Creating Map instance
-    my_map = Map(
-        mesonh.longitude[lon_index[0]: lon_index[1]],
-        mesonh.latitude[lat_index[0]: lat_index[1]]
+    my_map = Map(mesonh.longitude, mesonh.latitude)
+    lon = (
+        mesonh.longitude[j_lim[0], i_lim[0]],
+        mesonh.longitude[j_lim[1], i_lim[1]]
     )
-    
+    lat = (
+        mesonh.latitude[j_lim[0], i_lim[0]],
+        mesonh.latitude[j_lim[1], i_lim[1]]
+    )
+
+    print(i_lim, lon, (i_lim[1] - i_lim[0]) * 0.250)
+    print(j_lim, lat, (j_lim[1] - j_lim[0]) * 0.250)
+    print()
+    zoom = f"{round(float(lat[0]), 1)}-{round(float(lat[1]), 1)}N_{round(float(lon[0]), 1)}-{round(float(lon[1]), 1)}E"
+
     # Pressure
-    my_map.init_axes(
-        fig_kw={"figsize": (8, 5), "layout": "compressed"}
-    )
+    axes = my_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
+    axes.set_extent([lon[0], lon[1], lat[0], lat[1]])
+    
     var = mesonh.get_var("MSLP")
     contourf = my_map.plot_contourf(
-        var[lat_index[0]: lat_index[1], lon_index[0]: lon_index[1]],
+        var,
         cmap="turbo",
         extend="both",
         levels=np.linspace(995, 1015, 100)
     )
     cb = plt.colorbar(contourf, label="Pression au niveau de la mer (hPa)")
     cb.set_ticks(np.linspace(995, 1015, 8))
-    plt.savefig(f"pressure_{time}.png")
+    plt.savefig(f"pressure_{time}_{zoom}_{dx}m.png")
     
     # Clouds
-    my_map.init_axes(
+    axes = my_map.init_axes(
         fig_kw={"figsize": (8, 5), "layout": "compressed"},
         feature_kw={"linewidth": 1, "alpha": 0.5, "color": "white"}
-    )
+    )[1]
+    axes.set_extent([lon[0], lon[1], lat[0], lat[1]])
+    
     var = mesonh.get_var("THCW", "THRW", "THIC", "THSN", "THGR", func = sum_clouds)
     contourf = my_map.plot_contourf(
-        var[lat_index[0]: lat_index[1], lon_index[0]: lon_index[1]],
+        var,
         cmap=LinearSegmentedColormap.from_list("cmap2", ["black", "white", "blue", "red"]),
         levels=np.linspace(clouds_min, clouds_max, 100)
     )
     cb = plt.colorbar(contourf, label="Épaisseur nuageuse (mm)")
     cb.set_ticks(np.linspace(clouds_min, clouds_max, 8))
-    plt.savefig(f"clouds_{time}.png")
+    plt.savefig(f"clouds_{time}_{zoom}_{dx}m.png")
     
     # Wind
-    my_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})
+    axes = my_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
+    axes.set_extent([lon[0], lon[1], lat[0], lat[1]])
     var = mesonh.get_var("WIND10", func = lambda x: x * 3.6)
     contourf = my_map.plot_contourf(
-        var[lat_index[0]: lat_index[1], lon_index[0]: lon_index[1]],
-        cmap=LinearSegmentedColormap.from_list("cmap2", ["white", (240/255, 248/255, 255/255), "darkcyan", "yellow", "orange", "red", "purple", "black"]), 
+        var,
+        cmap=LinearSegmentedColormap.from_list("cmap2", [
+            "white", (240/255, 248/255, 255/255),
+            "darkcyan",
+            "yellow",
+            "orange",
+            "red",
+            "purple",
+            "black"
+        ]), 
         levels=np.linspace(wind_min, wind_max, 100)
     )
     cb = plt.colorbar(contourf, label="Vitesse du vent horizontal (km/h)")
     cb.set_ticks(np.linspace(wind_min, wind_max, 8))
 
+    mesh = 25
+    if dx == 500:
+        mesh = 12
+    elif dx == 1000:
+        mesh = 6
+
     wind_u, wind_v = mesonh.get_var("UM10", "VM10", "WIND10", func = norm_wind)
     my_map.plot_quiver(
-        wind_u[lat_index[0]: lat_index[1], lon_index[0]: lon_index[1]],
-        wind_v[lat_index[0]: lat_index[1], lon_index[0]: lon_index[1]], 
-        x_mesh=50,
-        y_mesh=50,
+        wind_u,
+        wind_v, 
+        x_mesh=mesh,
+        y_mesh=mesh,
         width=width,
-        scale=15,
+        scale=20,
         scale_units="xy",
         units="xy"
     )
-    plt.savefig(f"wind_{time}.png")
+    plt.savefig(f"wind_{time}_{zoom}_{dx}m.png")
 
 
 def get_time_index(hour, minute):
     return (hour - 4) * 60 + (minute - 1)
 
 
-files = []
-for time_index in range (1, 361, 1):
-    files.append(f"../Donnees/DX250/CORSE.1.SEG01.OUT.{str(time_index).zfill(3)}.nc")
-mesonh = MesoNH(files)
+def latex_code(i_lim, j_lim, time):
+    content =  "\\begin{center} \\begin{tabular}{rl}"
+    content += f"\n\t\\textbf{{Heure simulation}}    & {time} TU \\\\"
+    content += "\n\t\\textbf{Heure observation}   & \\\\"
+    content += f"\n\t\\textbf{{Longitude}}           & {lon[i_lim[0], j_lim[0]]}°E -- {lon[i_lim[1], j_lim[1]]}°E \\\\"
+    content += f"\n\t\\textbf{{Index longitude}}     & {i_lim[0]} -- {i_lim[1]} \\\\"
+    content += f"\n\t\\textbf{{Distance zonale}}     & {(i_lim[1] - i_lim[0]) * 0.250}~km \\\\"
+    content += f"\n\t\\textbf{{Latitude}}            & {lat[i_lim[0], j_lim[0]]}°N -- {lat[i_lim[1], j_lim[1]]}°N \\\\"
+    content += f"\n\t\\textbf{{Index latitude}}      & {j_lim[0]} -- {j_lim[1]} \\\\"
+    content += f"\n\t\\textbf{{Distance méridienne}} & {(j_lim[1] - j_lim[0]) * 0.250}~km \\\\"
+    content += "\n\\end{tabular} \\end{center}"
+    print(content)
 
-clouds_min, clouds_max = mesonh.get_limits("THCW", "THRW", "THIC", "THSN", "THGR", func=sum_clouds)
-wind_min, wind_max = mesonh.get_limits("WIND10", func=lambda x: x * 3.6)
+
+def plot_all(dx=250):
+    files = []
+    for time_index in range (1, 361, 1):
+        files.append(f"../Donnees/DX{dx}/CORSE.1.SEG01.OUT.{str(time_index).zfill(3)}.nc")
+    mesonh = MesoNH(files)
+
+    with open(f"lim_{dx}m.json", "r") as file:
+        lim = json.loads(file.read())
+
+    clouds_min, clouds_max = lim["clouds"]
+    wind_min, wind_max = lim["wind"]
+
+    os.system("rm *.png")
+    for i_lim, j_lim, hour, minute, width in args:
+        mesonh.get_data(get_time_index(hour, minute))
+        time = f"{str(hour).zfill(2)}h{str(minute).zfill(2)}"
+        plot_zoom(mesonh, i_lim, j_lim, time, width, dx)
+
+
+mesonh = MesoNH(["../Donnees/DX250/CORSE.1.SEG01.OUT.001.nc"])
+foo = np.vectorize(lambda x: round(float(x), 1))
+lon = foo(mesonh.longitude[:, :])
+lat = foo(mesonh.latitude[:, :])
 
 args = (
-    ((5.5, 7), (40, 43), 5, 0, 0.0075),
-    ((6, 8), (40.5, 43), 6, 30, 0.0075),
-    ((5.5, 8.5), (40.75, 43.5), 7, 0, 0.0075),
-    ((6.5, 9), (41, 43.5), 7, 15, 0.0075),
-    ((7, 9.5), (42, 43.8), 8, 15, 0.006),
-    ((7, 10), (42.5, 43.8), 8, 45, 0.0065)   
+    ((600 , 860 ), (497 , 1397), 5, 0 , 0.004),
+    ((950 , 1250), (966 , 1400), 6, 30, 0.004), 
+    ((1000, 1370), (1200, 1500), 7, 0 , 0.004),
+    ((1150, 1450), (1260, 1530), 7, 15, 0.004),
+    ((1440, 1790), (1530, 1730), 8, 15, 0.004),
+    ((1470, 1940), (1650, 1930), 8, 45, 0.005)
 )
-
-
-for lon, lat, hour, minute, width in args[1:2]:
-    mesonh.get_data(get_time_index(hour, minute))
-    time = f"{str(hour).zfill(2)}h{str(minute).zfill(2)}"
-    plot_zoom(mesonh, lon, lat, time, width)

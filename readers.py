@@ -61,8 +61,8 @@ class MesoNH:
         self.data = None
 
         data = Dataset(self.files[0])
-        self.longitude = data.variables["longitude"][0]
-        self.latitude = data.variables["latitude"][:, 0]
+        self.longitude = data.variables["longitude"][:,:]
+        self.latitude = data.variables["latitude"][:,:]
 
     def get_data(self, file_index: int):
         """
@@ -223,7 +223,7 @@ class Antilope:
 
             args = []
             for varname in varnames:
-                args.append(self.data.variables[varname][0])
+                args.append(data.variables[varname][0])
             result = func(*args)
 
             current_min = result.min()
@@ -324,7 +324,7 @@ class Satellite:
 
             args = []
             for varname in varnames:
-                args.append(self.data.variables[varname][0])
+                args.append(data.variables[varname][0])
             result = func(*args)
 
             current_min = result.min()
