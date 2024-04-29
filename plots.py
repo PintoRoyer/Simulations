@@ -26,8 +26,10 @@ class Map:
 
     Attributes
     ----------
-    reader : class
-        An instance of a reader class.
+    longitude : np.array
+        The array of longitudes.
+    latitude : np.array
+        The array of latitudes.
     axes : plt.Axes
         The axes to plot the map on.
     """
@@ -140,10 +142,8 @@ class Map:
 
         Parameters
         ----------
-        *varnames
-            The names of the variables to be given to ``func``.
-        func : callable, keyword-only, optionnal
-            A function that takes all the variables given in entry and returns a 2D array.
+        var_array : np.array
+            The NumPy array to plot.
         kwargs
             These keywords arguments will be given to ``axes.contourf``.
 
@@ -167,10 +167,8 @@ class Map:
 
         Parameters
         ----------
-        *varnames
-            The names of the variables to be given to ``func``.
-        func : callable, keyword-only, optionnal
-            A function that takes all the variables given in entry and returns a 2D array.
+        var_array : np.array
+            The NumPy array to plot.
         kwargs
             These keywords arguments will be given to ``axes.contour``.
 
@@ -188,25 +186,35 @@ class Map:
 
         return contour
 
-    def plot_quiver(self, x_var_array: np.array, y_var_array: np.array, *, x_mesh: int = None, y_mesh: int = None, **kwargs):
+    def plot_quiver(
+        self,
+        x_var_array: np.array,
+        y_var_array: np.array,
+        *,
+        x_mesh: int = None,
+        y_mesh: int = None,
+        **kwargs
+    ):
         """
         Add a quiver to the given axes.
 
         Parameters
         ----------
-        *varnames
-            The names of the variables to be given to ``func``.
-        mesh : int, keyword-only, optionnal
-            It corresponds to the arrows to display.
-        func : callable, keyword-only, optionnal
-            A function that takes all the variables given in entry and returns two 2D arrays.
+        x_var_array : np.array
+            The x components of the arrows.
+        y_var_array : np.array
+            The y components of the arrows.
+        x_mesh : int, keyword-only, optionnal
+            It corresponds to the arrows to display on x_axis.
+        y_mesh : int, keyword-only, optionnal
+            It corresponds to the arrows to display on y_axis.
         kwargs
             These keywords arguments will be given to ``axes.quiver``.
 
         Returns
         ------
-        contourf : plt.Contourf
-            The added contourf.
+        quiver : plt.Quiver
+            The added quiver.
         """
         x_size = len(x_var_array[0])
         y_size = len(x_var_array[:, 0])
@@ -214,7 +222,6 @@ class Map:
             x_mesh = x_size // 50
         if not y_mesh:
             y_mesh = y_size // 50
-
 
         quiver = self.axes.quiver(
             self.longitude[::y_mesh, ::x_mesh],
