@@ -99,6 +99,26 @@ class MesoNH:
 
         return func(*args)
 
+    def get_mean(
+        self,
+        index_i: int, index_j: int,
+        *varnames,
+        func: callable = lambda x: x,
+        t_range=None,
+        nb: int = 2,
+    ):
+        if not t_range:
+            t_range = range(0, len(self.files))
+
+        mean_per_timestep = []
+        for i in t_range:
+            self.get_data(i)
+            array = self.get_var(*varnames, func=func)
+            mean_per_timestep.append(
+                np.mean(array[index_j - nb: index_j + nb, index_i - nb: index_i + nb])
+            )
+        return np.mean(mean_per_timestep)
+
     def get_limits(self, *varnames, func: callable = lambda x: x):
         """
         Search min and max of a given variable.

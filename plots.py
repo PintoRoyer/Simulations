@@ -16,6 +16,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
 class Map:
@@ -224,3 +225,41 @@ class Map:
         )
 
         return quiver
+
+
+class TemporalProfile:
+    def __init__(self, axes: plt.Axes = None, **subplots_kw):
+        """Constructor method."""
+        self.axes = axes
+        if not self.axes:
+            self.fig, self.axes = plt.subplots(**subplots_kw)
+
+    def add_profile_from_array(self, time, array, **kwargs):
+        self.axes.plot(time, array, **kwargs)
+
+    def add_profile_from_csv(self, filename: str, time: str, variable: str, **kwargs):
+        data = pd.read_csv(filename, delimiter=";")
+        self.axes.plot(data[time], data[variable], **kwargs)
+        self.axes.grid("on")
+
+
+def get_index(var_array: np.array, value):
+    delta = np.abs(value - var_array)
+    index = np.array(np.where(delta == delta.min()))
+    return index[:,0]
+
+
+def index_to_latlon(mesonh, i_lim, j_lim):
+    lon_min = mesonh.longitude[i_lim[0], j_lim[0]]
+    lat_min = mesonh.latitude[i_lim[0], j_lim[0]]
+    lon_max = mesonh.longitude[i_lim[1], j_lim[1]]
+    lat_max = mesonh.latitude[i_lim[1], j_lim[1]]
+    return ((lon_min, lon_max),(lat_min, lat_max))
+
+
+def latlon_to_index(mesonh, lon_lim, lat_lim):
+    j_min = get_index(mesonh.longitude, lon_lim[0])[1]
+    j_max = get_index(mesonh.longitude, lon_lim[1])[1]
+    i_min = get_index(mesonh.latitude, lat_lim[0])[0]
+    i_max = get_index(mesonh.latitude, lat_lim[1])[0]
+    return ((i_min, i_max),(j_min, j_max))
