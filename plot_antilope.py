@@ -8,11 +8,17 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
 from plots import Map
-from readers import Antilope
+from readers import MesoNH, Antilope
 
 
-files = [
-    f"/home/roya/RADAR/NC/PRECIP_SOL_0_2208XX{str(time_index).zfill(2)}.nc"
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "serif",
+    "font.size": 15
+})
+
+antilope_files = [
+    f"../Donnees/RADAR/PRECIP_SOL_0_2208XX{str(time_index).zfill(2)}.nc"
     for time_index in range(24)
 ]
 cmap = LinearSegmentedColormap.from_list(
@@ -31,45 +37,33 @@ cmap = LinearSegmentedColormap.from_list(
 )
 
 
-antilope = Antilope(files, 17)
-mymap = Map(antilope)
-var_min, var_max = antilope.get_limits("prec")
-levels = np.linspace(var_min, var_max, 100)
+def plot_antilope(radar_map, antilope, zoom: bool = True):
+    for i in range(23):
+        plt.close("all")
+        antilope.get_data(i)
+        date = datetime.strptime(f"2022-08-01 {str(i).zfill(2)}:00:00", "%Y-%m-%d %H:%M:%S") + timedelta(hours=int(antilope.data["time"][17]))
 
-for i in range(23):
-    plt.close("all")
-    antilope.get_data(i)
-    date = datetime.strptime(f"2022-08-01 {str(i).zfill(2)}:00:00", "%Y-%m-%d %H:%M:%S") + timedelta(hours=int(antilope.data["time"][17]))
+        axes = radar_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
+        if zoom:
+            axes.set_extent((
+                2.5,
+                antilope.longitude[-1],
+                antilope.latitude[-1],
+                45
+            ))
+        
+        axes.set_title(f"Précipitations mesurées par le réseau ANTILOPE\n{date} TU")
+        cf = radar_map.plot_contourf(antilope.get_var("prec"), cmap=cmap, levels=np.linspace(0, 160, 100))
+        cb = plt.colorbar(cf, label="Précipitation (mm)")
+        cb.set_ticks(np.linspace(0, 160, 8))
+        
+        if zoom:
+            plt.savefig(f"antilope_zoom_{date}.png")
+        else:
+            plt.savefig(f"antilope_{date}.png")
 
-    axes = mymap.init_axes()[1]
 
-    mymap.set_title(
-        f"Précipitations mesurées par le réseau ANTILOPE\n{date} TU",
-        fmt_kw={"date": date}
-    )
-    cf = mymap.plot_contourf("prec", cmap=cmap, levels=levels)
-    plt.colorbar(cf, label="Précipitation (mm)", fraction=0.03)
-    plt.tight_layout()
-    plt.savefig(f"antilope_{date}.png")
+antilope = Antilope(antilope_files, 17)
+radar_map = Map(antilope.longitude, antilope.latitude)
 
-for i in range(23):
-    plt.close("all")
-    antilope.get_data(i)
-    date = datetime.strptime(f"2022-08-01 {str(i).zfill(2)}:00:00", "%Y-%m-%d %H:%M:%S") + timedelta(hours=int(antilope.data["time"][17]))
-
-    axes = mymap.init_axes()[1]
-    axes.set_extent((
-        2.5,
-        antilope.longitude[-1],
-        antilope.latitude[-1],
-        45
-    ))
-    
-    mymap.set_title(
-        f"Précipitations mesurées par le réseau ANTILOPE\n{date} TU",
-        fmt_kw={"date": date}
-    )
-    cf = mymap.plot_contourf("prec", cmap=cmap, levels=levels)
-    plt.colorbar(cf, label="Précipitation (mm)", fraction=0.03)
-    plt.tight_layout()
-    plt.savefig(f"antilope_zoom_{date}.png")
+plot_antilope(radar_map, antilope)
