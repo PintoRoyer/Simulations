@@ -127,25 +127,27 @@ def get_time_index(hour, minute):
     return (hour - 4) * 60 + (minute - 1)
 
 
-def latex_code(i_lim, j_lim, time):
+def latex_code(mesonh, dx, i_lim, j_lim, time):
+    lon = mesonh.longitude
+    lat = mesonh.latitude
     content =  "\\begin{center} \\begin{tabular}{rl}"
     content += f"\n\t\\textbf{{Heure simulation}}    & {time} TU \\\\"
     content += "\n\t\\textbf{Heure observation}   & \\\\"
-    content += f"\n\t\\textbf{{Longitude}}           & {lon[i_lim[0], j_lim[0]]}°E -- {lon[i_lim[1], j_lim[1]]}°E \\\\"
+    content += f"\n\t\\textbf{{Longitude}}           & {lon[j_lim[0], i_lim[0]]:.5f}°E -- {lon[j_lim[1], i_lim[1]]:.5f}°E \\\\"
     content += f"\n\t\\textbf{{Index longitude}}     & {i_lim[0]} -- {i_lim[1]} \\\\"
-    content += f"\n\t\\textbf{{Distance zonale}}     & {(i_lim[1] - i_lim[0]) * 0.250}~km \\\\"
-    content += f"\n\t\\textbf{{Latitude}}            & {lat[i_lim[0], j_lim[0]]}°N -- {lat[i_lim[1], j_lim[1]]}°N \\\\"
+    content += f"\n\t\\textbf{{Distance zonale}}     & {(i_lim[1] - i_lim[0]) * dx/1000}~km \\\\"
+    content += f"\n\t\\textbf{{Latitude}}            & {lat[j_lim[0], i_lim[0]]:.5f}°N -- {lat[j_lim[1], i_lim[1]]:.5f}°N \\\\"
     content += f"\n\t\\textbf{{Index latitude}}      & {j_lim[0]} -- {j_lim[1]} \\\\"
-    content += f"\n\t\\textbf{{Distance méridienne}} & {(j_lim[1] - j_lim[0]) * 0.250}~km \\\\"
+    content += f"\n\t\\textbf{{Distance méridienne}} & {(j_lim[1] - j_lim[0]) * dx/1000}~km \\\\"
     content += "\n\\end{tabular} \\end{center}"
     print(content)
 
 
 def index_to_latlon(mesonh, i_lim, j_lim):
-    lon_min = mesonh.longitude[i_lim[0], j_lim[0]]
-    lat_min = mesonh.latitude[i_lim[0], j_lim[0]]
-    lon_max = mesonh.longitude[i_lim[1], j_lim[1]]
-    lat_max = mesonh.latitude[i_lim[1], j_lim[1]]
+    lon_min = mesonh.longitude[j_lim[0], i_lim[0]]
+    lat_min = mesonh.latitude[j_lim[0], i_lim[0]]
+    lon_max = mesonh.longitude[j_lim[1], i_lim[1]]
+    lat_max = mesonh.latitude[j_lim[1], i_lim[1]]
     return ((lon_min, lon_max),(lat_min, lat_max))
 
 
@@ -167,7 +169,7 @@ def get_mesonh(dx):
 def plot_all(dx, args):
     mesonh = get_mesonh(dx)
 
-    with open(f"lim_{dx}m.json", "r") as file:
+    with open("lim_250m.json", "r") as file:
         lim = json.loads(file.read())
 
     clouds_min, clouds_max = lim["clouds"]
@@ -177,8 +179,10 @@ def plot_all(dx, args):
     for i_lim, j_lim, hour, minute, width in args:
         mesonh.get_data(get_time_index(hour, minute))
         time = f"{str(hour).zfill(2)}h{str(minute).zfill(2)}"
-        plot_zoom(mesonh, i_lim, j_lim, time, width, dx, clouds_min, clouds_max, wind_min, wind_max)
-        
+        #plot_zoom(mesonh, i_lim, j_lim, time, width, dx, clouds_min, clouds_max, wind_min, wind_max)
+        latex_code(mesonh, dx, i_lim, j_lim, time)
+
+
         
 dx250_zoom = (
     ((600 , 860 ), (497 , 1397), 5, 0 , 0.004),
@@ -209,7 +213,9 @@ dx1000 =  (
 
 plot_all(1000, dx1000_zoom)
 
+
 # mesonh250 = get_mesonh(250)
 # mesonh1000 = get_mesonh(1000)
 # lon_lim, lat_lim = index_to_latlon(mesonh250, (1470, 1940), (1650, 1930))
-# i_lim, j_lim = latlon_to_index(mesonh1000, lon_lim, lat_lim)
+# i_lim, j_lim = latlon_to_index(mesonh250, lon_lim, lat_lim)
+# print(i_lim, j_lim)
