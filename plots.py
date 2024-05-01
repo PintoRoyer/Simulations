@@ -4,12 +4,13 @@ Plots
 
 Description
 -----------
-This module provides to plot maps from netcdf files. Different types of intern organization can be
-managed throught a reader class.
+This module provides some classes to plot several types of graphs from netcdf files. Different types
+of intern organization can be managed throught a reader class.
 
-Class
------
+Classes
+-------
 Map
+TemporalProfile
 """
 
 import cartopy.crs as ccrs
@@ -152,12 +153,7 @@ class Map:
         contourf : plt.QuadContourSet
             The added contourf.
         """
-        contourf = self.axes.contourf(
-            self.longitude,
-            self.latitude,
-            var_array,
-            **kwargs
-        )
+        contourf = self.axes.contourf(self.longitude, self.latitude, var_array, **kwargs)
 
         return contourf
 
@@ -177,12 +173,7 @@ class Map:
         contour : plt.QuadContourSet
             The added contour.
         """
-        contour = self.axes.contour(
-            self.longitude,
-            self.latitude,
-            var_array,
-            **kwargs
-        )
+        contour = self.axes.contour(self.longitude, self.latitude, var_array, **kwargs)
 
         return contour
 
@@ -235,38 +226,64 @@ class Map:
 
 
 class TemporalProfile:
+    """
+    This class provides some function to plot temporal profiles from an array of data or a csv file.
+
+    Attributes
+    ----------
+    axes : plt.Axes
+        The axes to plot on.
+    fig : plt.Figure
+        The figure that contains ``axes``.
+    """
+
     def __init__(self, axes: plt.Axes = None, **subplots_kw):
         """Constructor method."""
+        self.fig = None
         self.axes = axes
         if not self.axes:
             self.fig, self.axes = plt.subplots(**subplots_kw)
 
-    def add_profile_from_array(self, time, array, **kwargs):
-        self.axes.plot(time, array, **kwargs)
+    def add_profile_from_array(self, time: np.array, array: np.array, **kwargs):
+        """
+        Add a profile to the TemporalProfile.axes from a given array of values.
+
+        Parameters
+        ----------
+        time : np.array
+            The time array.
+        array : np.array
+            The array that contains the values to plot. It should be a 1D array.
+        kwargs : optionnal, keyword-only
+            Theses keyword arguments will be given to ``axes.plot``.
+
+        Returns
+        -------
+        out : list
+            Returns the list of ``plt.Line2D`` added from ``array``.
+        """
+        return self.axes.plot(time, array, **kwargs)
 
     def add_profile_from_csv(self, filename: str, time: str, variable: str, **kwargs):
+        """
+        Add a profile to the TemporalProfile.axes from a CSV file separated with a ``;``.
+
+        Parameters
+        ----------
+        filename : str
+            The name of the CSV file.
+        time : str
+            The name of the time column.
+        variable : str
+            The name of the variable to plot in the CSV file.
+        kwargs : optionnal, keyword-only
+            Theses keyword arguments will be given to ``axes.plot``.
+
+        Returns
+        -------
+        out : list
+            Returns the list of ``plt.Line2D`` added from the CSV file.
+        """
         data = pd.read_csv(filename, delimiter=";")
         self.axes.plot(data[time], data[variable], **kwargs)
         self.axes.grid("on")
-
-
-def get_index(var_array: np.array, value):
-    delta = np.abs(value - var_array)
-    index = np.array(np.where(delta == delta.min()))
-    return index[:,0]
-
-
-def index_to_latlon(mesonh, i_lim, j_lim):
-    lon_min = mesonh.longitude[i_lim[0], j_lim[0]]
-    lat_min = mesonh.latitude[i_lim[0], j_lim[0]]
-    lon_max = mesonh.longitude[i_lim[1], j_lim[1]]
-    lat_max = mesonh.latitude[i_lim[1], j_lim[1]]
-    return ((lon_min, lon_max),(lat_min, lat_max))
-
-
-def latlon_to_index(mesonh, lon_lim, lat_lim):
-    j_min = get_index(mesonh.longitude, lon_lim[0])[1]
-    j_max = get_index(mesonh.longitude, lon_lim[1])[1]
-    i_min = get_index(mesonh.latitude, lat_lim[0])[0]
-    i_max = get_index(mesonh.latitude, lat_lim[1])[0]
-    return ((i_min, i_max),(j_min, j_max))

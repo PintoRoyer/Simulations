@@ -1,6 +1,9 @@
-from plots import Map
+"""Draw Corsica relief on a map and export fig in a PNG file."""
+
+import matplotlib.pyplot as plt
 from netCDF4 import Dataset
-import matlplotlib.pyplot as plt
+
+from plots import Map
 
 data = Dataset("/mesonh/bartc/corse_18aout22/prep_250m_from_mnh/001_prep_pgd/PGD_CORSE_0250M.nc")
 

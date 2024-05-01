@@ -1,221 +1,274 @@
-from plots import Map
-from readers import MesoNH
+#! /usr/bin/env python3
+"""Plot zoom of clouds, pressure and wind for the different resolution of the simulation."""
 
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
 import json
 
-import os
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.colors import LinearSegmentedColormap
 
-from datetime import datetime, timedelta
+from plots import Map
+from readers import MesoNH, get_mesonh, index_to_lonlat
 
-
-plt.rcParams.update({
-    "text.usetex": False,
-    # "font.family": "serif",
-    "font.size": 15
-})
-
-
-def get_index(var_array: np.array, value):
-    delta = np.abs(value - var_array)
-    index = np.array(np.where(delta == delta.min()))
-    return index[:,0]
+plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 
 
 def sum_clouds(thcw, thrw, thic, thsn, thgr):
+    """Add up different thickness of the condensed states of water."""
     return thcw + thrw + thic + thsn + thgr
 
 
 def norm_wind(um10, vm10, wind10):
-    return um10 / wind10, vm10 / wind10 
+    """Normalize the wind components."""
+    return um10 / wind10, vm10 / wind10
 
 
-def plot_zoom(mesonh, i_lim, j_lim, time, width, dx, clouds_min, clouds_max, wind_min, wind_max):
+def get_time_index(hour: int, minute: int):
+    """
+    Compute the index of the Meso-NH file from hour and minute.
+
+    Parameters
+    ----------
+    hour : int
+        The hours.
+    minute : int
+        The minutes.
+
+    Returns
+    -------
+    out : int
+        The index of the file corresponding to the given timestamp.
+    """
+    return (hour - 4) * 60 + (minute - 1)
+
+
+def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: int):
+    """
+    Plot zoomed-in maps for clouds, pressure and wind at a given resolution.
+
+    Parameters
+    ----------
+    mesonh : MesoNH
+        A Meso-NH reader instance.
+    i_lim : tuple
+        The limit indexes on x-axis.
+    j_lim : tuple
+        The limit indexes on y-axis.
+    time : str
+        The time in a string. It's only use for display.
+    resol_dx : int
+        The desired resolution.
+    """
     plt.close("all")
 
     # Creating Map instance
     my_map = Map(mesonh.longitude, mesonh.latitude)
-    lon = (
-        mesonh.longitude[j_lim[0], i_lim[0]],
-        mesonh.longitude[j_lim[1], i_lim[1]]
-    )
-    lat = (
-        mesonh.latitude[j_lim[0], i_lim[0]],
-        mesonh.latitude[j_lim[1], i_lim[1]]
+
+    # Information on zoom
+    lon, lat = index_to_lonlat(mesonh, i_lim, j_lim)
+    print(f"{time}\n" + len(time) * "-")
+    print("Longitude")
+    print(f".. {(lon[0]), lon[1]}°E")
+    print(f".. {i_lim}")
+    print(f".. {(i_lim[1] - i_lim[0]) * resol_dx / 1e3} km")
+    print("Latitude")
+    print(f".. {(lat[0]), lat[1]}°E")
+    print(f".. {j_lim}")
+    print(f".. {(j_lim[1] - j_lim[0]) * resol_dx / 1e3} km\n")
+
+    zoom = (
+        f"{round(float(lat[0]), 1)}-{round(float(lat[1]), 1)}N"
+        f"_{round(float(lon[0]), 1)}-{round(float(lon[1]), 1)}E"
     )
 
-    print(i_lim, lon, (i_lim[1] - i_lim[0]) * 0.250)
-    print(j_lim, lat, (j_lim[1] - j_lim[0]) * 0.250)
-    print()
-    zoom = f"{round(float(lat[0]), 1)}-{round(float(lat[1]), 1)}N_{round(float(lon[0]), 1)}-{round(float(lon[1]), 1)}E"
+    # Limits for colorbars
+    with open("limits/lim_250m.json", "r", encoding="utf-8") as file:
+        lim = json.loads(file.read())
 
     # Pressure
     axes = my_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
     axes.set_extent([lon[0], lon[1], lat[0], lat[1]])
-    
+
     var = mesonh.get_var("MSLP")
     contourf = my_map.plot_contourf(
-        var,
-        cmap="turbo",
-        extend="both",
-        levels=np.linspace(995, 1015, 100)
+        var, cmap="turbo", extend="both", levels=np.linspace(995, 1015, 100)
     )
-    cb = plt.colorbar(contourf, label="Pression au niveau de la mer (hPa)")
-    cb.set_ticks(np.linspace(995, 1015, 8))
-    plt.savefig(f"pressure_{time}_{zoom}_{dx}m.png")
-    
+    cbar = plt.colorbar(contourf, label="Pression au niveau de la mer (hPa)")
+    cbar.set_ticks(np.linspace(995, 1015, 8))
+    plt.savefig(f"pressure_{time}_{zoom}_{resol_dx}m.png")
+
     # Clouds
     axes = my_map.init_axes(
         fig_kw={"figsize": (8, 5), "layout": "compressed"},
-        feature_kw={"linewidth": 1, "alpha": 0.5, "color": "white"}
+        feature_kw={"linewidth": 1, "alpha": 0.5, "color": "white"},
     )[1]
     axes.set_extent([lon[0], lon[1], lat[0], lat[1]])
-    
-    var = mesonh.get_var("THCW", "THRW", "THIC", "THSN", "THGR", func = sum_clouds)
+
+    var = mesonh.get_var("THCW", "THRW", "THIC", "THSN", "THGR", func=sum_clouds)
     contourf = my_map.plot_contourf(
         var,
         cmap=LinearSegmentedColormap.from_list("cmap2", ["black", "white", "blue", "red"]),
-        levels=np.linspace(clouds_min, clouds_max, 100)
+        levels=np.linspace(lim["clouds"][0], lim["clouds"][1], 100),
     )
-    cb = plt.colorbar(contourf, label="Épaisseur nuageuse (mm)")
-    cb.set_ticks(np.linspace(clouds_min, clouds_max, 8))
-    plt.savefig(f"clouds_{time}_{zoom}_{dx}m.png")
-    
-    # Wind
+    cbar = plt.colorbar(contourf, label="Épaisseur nuageuse (mm)")
+    cbar.set_ticks(np.linspace(lim["clouds"][0], lim["clouds"][1], 8))
+    plt.savefig(f"clouds_{time}_{zoom}_{resol_dx}m.png")
+
+    # Wind speed
     axes = my_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
     axes.set_extent([lon[0], lon[1], lat[0], lat[1]])
-    var = mesonh.get_var("WIND10", func = lambda x: x * 3.6)
+    var = mesonh.get_var("WIND10", func=lambda x: x * 3.6)
     contourf = my_map.plot_contourf(
         var,
-        cmap=LinearSegmentedColormap.from_list("cmap2", [
-            "white", (240/255, 248/255, 255/255),
-            "darkcyan",
-            "yellow",
-            "orange",
-            "red",
-            "purple",
-            "black"
-        ]), 
-        levels=np.linspace(wind_min, wind_max, 100)
+        cmap=LinearSegmentedColormap.from_list(
+            "cmap2",
+            [
+                "white",
+                (240 / 255, 248 / 255, 255 / 255),
+                "darkcyan",
+                "yellow",
+                "orange",
+                "red",
+                "purple",
+                "black",
+            ],
+        ),
+        levels=np.linspace(lim["wind"][0], lim["wind"][1], 100),
     )
-    cb = plt.colorbar(contourf, label="Vitesse du vent horizontal (km/h)")
-    cb.set_ticks(np.linspace(wind_min, wind_max, 8))
+    cbar = plt.colorbar(contourf, label="Vitesse du vent horizontal (km/h)")
+    cbar.set_ticks(np.linspace(lim["wind"][0], lim["wind"][1], 8))
 
+    # Wind direction
     mesh = 25
-    if dx == 500:
+    if resol_dx == 500:
         mesh = 12
-    elif dx == 1000:
+    elif resol_dx == 1000:
         mesh = 6
 
-    wind_u, wind_v = mesonh.get_var("UM10", "VM10", "WIND10", func = norm_wind)
+    wind_u, wind_v = mesonh.get_var("UM10", "VM10", "WIND10", func=norm_wind)
     my_map.plot_quiver(
         wind_u,
-        wind_v, 
+        wind_v,
         x_mesh=mesh,
         y_mesh=mesh,
-        width=width,
+        width=0.005,
         scale=20,
         scale_units="xy",
-        units="xy"
+        units="xy",
     )
-    plt.savefig(f"wind_{time}_{zoom}_{dx}m.png")
+    plt.savefig(f"wind_{time}_{zoom}_{resol_dx}m.png")
 
 
-def get_time_index(hour, minute):
-    return (hour - 4) * 60 + (minute - 1)
+def latex_code(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: int):
+    """
+    Generate and print LaTeX code that contains a tabular with the given index, the limit
+    coordinates and size of the zoom.
 
-
-def latex_code(mesonh, dx, i_lim, j_lim, time):
+    Parameters
+    ----------
+    mesonh : MesoNH
+        A Meso-NH reader instance.
+    i_lim : tuple
+        The limit indexes on x-axis.
+    j_lim : tuple
+        The limit indexes on y-axis.
+    time : str
+        The time in a string. It's only use for display.
+    resol_dx : int
+        The desired resolution.
+    """
     lon = mesonh.longitude
     lat = mesonh.latitude
-    content =  "\\begin{center} \\begin{tabular}{rl}"
+
+    content = "\\begin{center} \\begin{tabular}{rl}"
     content += f"\n\t\\textbf{{Heure simulation}}    & {time} TU \\\\"
     content += "\n\t\\textbf{Heure observation}   & \\\\"
-    content += f"\n\t\\textbf{{Longitude}}           & {lon[j_lim[0], i_lim[0]]:.5f}°E -- {lon[j_lim[1], i_lim[1]]:.5f}°E \\\\"
+    content += (
+        f"\n\t\\textbf{{Longitude}}           & {lon[j_lim[0], i_lim[0]]:.5f}°E"
+        f" -- {lon[j_lim[1], i_lim[1]]:.5f}°E \\\\"
+    )
     content += f"\n\t\\textbf{{Index longitude}}     & {i_lim[0]} -- {i_lim[1]} \\\\"
-    content += f"\n\t\\textbf{{Distance zonale}}     & {(i_lim[1] - i_lim[0]) * dx/1000}~km \\\\"
-    content += f"\n\t\\textbf{{Latitude}}            & {lat[j_lim[0], i_lim[0]]:.5f}°N -- {lat[j_lim[1], i_lim[1]]:.5f}°N \\\\"
+    content += (
+        f"\n\t\\textbf{{Distance zonale}}     & {(i_lim[1] - i_lim[0]) * resol_dx/1000}~km \\\\"
+    )
+    content += (
+        f"\n\t\\textbf{{Latitude}}            & {lat[j_lim[0], i_lim[0]]:.5f}°N"
+        f" -- {lat[j_lim[1], i_lim[1]]:.5f}°N \\\\"
+    )
     content += f"\n\t\\textbf{{Index latitude}}      & {j_lim[0]} -- {j_lim[1]} \\\\"
-    content += f"\n\t\\textbf{{Distance méridienne}} & {(j_lim[1] - j_lim[0]) * dx/1000}~km \\\\"
+    content += (
+        f"\n\t\\textbf{{Distance méridienne}} & {(j_lim[1] - j_lim[0]) * resol_dx/1000}~km \\\\"
+    )
     content += "\n\\end{tabular} \\end{center}"
+
     print(content)
 
 
-def index_to_latlon(mesonh, i_lim, j_lim):
-    lon_min = mesonh.longitude[j_lim[0], i_lim[0]]
-    lat_min = mesonh.latitude[j_lim[0], i_lim[0]]
-    lon_max = mesonh.longitude[j_lim[1], i_lim[1]]
-    lat_max = mesonh.latitude[j_lim[1], i_lim[1]]
-    return ((lon_min, lon_max),(lat_min, lat_max))
+def run_all(resol_dx, args, *, plot: bool = False, latex: bool = False):
+    """
+    Run ``plot_zoom`` and ``latex_code`` from a list of pre-defined zooms.
 
+    Parameters
+    ----------
+    resol_dx : int
+        The resolution of the simulation.
+    args : iterable
+        The arguments to be given to ``plot_all`` it should be like:
 
-def latlon_to_index(mesonh, lon_lim, lat_lim):
-    j_min = get_index(mesonh.longitude, lon_lim[0])[1]
-    j_max = get_index(mesonh.longitude, lon_lim[1])[1]
-    i_min = get_index(mesonh.latitude, lat_lim[0])[0]
-    i_max = get_index(mesonh.latitude, lat_lim[1])[0]
-    return ((i_min, i_max),(j_min, j_max))
+            args = (
+                ((i_min, i_max), (j_min, j_max), hour, minute),
+            )
 
+    plot : bool, keyword-only, optionnal
+        If set on ``True`` ``plot_zoom`` will be called. By default on ``False``.
+    latex : bool, keyword-only, optionnal
+        If set on ``True`` ``latex_code`` will be called. By default on ``False``.
 
-def get_mesonh(dx):
-    files = []
-    for time_index in range (1, 361, 1):
-        files.append(f"../Donnees/DX{dx}/CORSE.1.SEG01.OUT.{str(time_index).zfill(3)}.nc")
-    return MesoNH(files)
-    
+    """
+    mesonh = get_mesonh(resol_dx)
 
-def plot_all(dx, args):
-    mesonh = get_mesonh(dx)
-
-    with open("lim_250m.json", "r") as file:
-        lim = json.loads(file.read())
-
-    clouds_min, clouds_max = lim["clouds"]
-    wind_min, wind_max = lim["wind"]
-
-    os.system("rm *.png")
-    for i_lim, j_lim, hour, minute, width in args:
+    for i_lim, j_lim, hour, minute in args:
         mesonh.get_data(get_time_index(hour, minute))
         time = f"{str(hour).zfill(2)}h{str(minute).zfill(2)}"
-        #plot_zoom(mesonh, i_lim, j_lim, time, width, dx, clouds_min, clouds_max, wind_min, wind_max)
-        latex_code(mesonh, dx, i_lim, j_lim, time)
+
+        if plot:
+            plot_zoom(mesonh, i_lim, j_lim, time, resol_dx)
+        if latex:
+            latex_code(mesonh, i_lim, j_lim, time, resol_dx)
 
 
-        
-dx250_zoom = (
-    ((600 , 860 ), (497 , 1397), 5, 0 , 0.004),
-    ((950 , 1250), (966 , 1400), 6, 30, 0.004), 
-    ((1000, 1370), (1200, 1500), 7, 0 , 0.004),
-    ((1150, 1450), (1260, 1530), 7, 15, 0.004),
-    ((1440, 1790), (1530, 1730), 8, 15, 0.004),
-    ((1470, 1940), (1650, 1930), 8, 45, 0.005)
-)
+if __name__ == "__main__":
+    dx250_zoom = (
+        ((600, 860), (497, 1397), 5, 0),
+        ((950, 1250), (966, 1400), 6, 30),
+        ((1000, 1370), (1200, 1500), 7, 0),
+        ((1150, 1450), (1260, 1530), 7, 15),
+        ((1440, 1790), (1530, 1730), 8, 15),
+        ((1470, 1940), (1650, 1930), 8, 45),
+    )
 
-dx1000_zoom =  (
-    ((148 , 215 ), (123 , 348 ), 5, 0 , 0.004),
-    ((230 , 312 ), (242 , 362 ), 6, 30, 0.004), 
-    ((247 , 342 ), (298 , 381 ), 7, 0 , 0.004),
-    ((275 , 363 ), (314 , 389 ), 7, 15, 0.004),
-    ((320 , 446 ), (377 , 453 ), 8, 15, 0.004),
-    ((383 , 483 ), (414 , 472 ), 8, 45, 0.005)
-)
+    dx1000_zoom = (
+        ((148, 215), (123, 348), 5, 0),
+        ((230, 312), (242, 362), 6, 30),
+        ((247, 342), (298, 381), 7, 0),
+        ((275, 363), (314, 389), 7, 15),
+        ((320, 446), (377, 453), 8, 15),
+        ((383, 483), (414, 472), 8, 45),
+    )
 
-dx1000 =  (
-    ((0, -1), (0, -1), 5, 0 , 0.004),
-    ((0, -1), (0, -1), 6, 30, 0.004), 
-    ((0, -1), (0, -1), 7, 0 , 0.004),
-    ((0, -1), (0, -1), 7, 15, 0.004),
-    ((0, -1), (0, -1), 8, 15, 0.004),
-    ((0, -1), (0, -1), 8, 45, 0.005)
-)
+    dx1000 = (
+        ((0, -1), (0, -1), 5, 0),
+        ((0, -1), (0, -1), 6, 30),
+        ((0, -1), (0, -1), 7, 0),
+        ((0, -1), (0, -1), 7, 15),
+        ((0, -1), (0, -1), 8, 15),
+        ((0, -1), (0, -1), 8, 45),
+    )
 
-plot_all(1000, dx1000_zoom)
+    run_all(250, dx250_zoom, plot=True)
 
-
-# mesonh250 = get_mesonh(250)
-# mesonh1000 = get_mesonh(1000)
-# lon_lim, lat_lim = index_to_latlon(mesonh250, (1470, 1940), (1650, 1930))
-# i_lim, j_lim = latlon_to_index(mesonh250, lon_lim, lat_lim)
-# print(i_lim, j_lim)
+    # mesonh250 = get_mesonh(250)
+    # mesonh1000 = get_mesonh(1000)
+    # lon_lim, lat_lim = index_to_lonlat(mesonh250, (1470, 1940), (1650, 1930))
+    # i_lim, j_lim = lonlat_to_index(mesonh250, lon_lim, lat_lim)
+    # print(i_lim, j_lim)

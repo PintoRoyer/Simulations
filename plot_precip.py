@@ -1,60 +1,60 @@
+#! /usr/bin/env python3
+"""Plot accumulated precipitations over an hour from Meso-NH simulation."""
+
 from datetime import datetime, timedelta
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 
 from plots import Map
-from readers import MesoNH
+from readers import MesoNH, get_mesonh
+
+plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
+
+cmap = LinearSegmentedColormap.from_list(
+    "cmap1", ["white", "blue", "cyan", "green", "yellow", "orange", "red", "purple", "black"]
+)
 
 
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "serif",
-    "font.size": 15
-})
+def plot_precip(mesonh: MesoNH, precip_map: Map):
+    """
+    Plot the accumulated precipitations hour by hour from Meso-NH silulation data and export figs
+    in PNG format.
 
-cmap = LinearSegmentedColormap.from_list("cmap1", [
-    "white",
-    "blue",
-    "cyan",
-    "green",
-    "yellow",
-    "orange",
-    "red",
-    "purple",
-    "black"
-])
-files = [
-    f"../Donnees/DX250/CORSE.1.SEG01.OUT.{str(t).zfill(3)}.nc"
-    for t in range(1, 361)
-]
-mesonh = MesoNH(files)
-precip_map = Map(mesonh.longitude, mesonh.latitude)
-var_min, var_max = np.inf, -np.inf
+    Parameters
+    ---------
+    mesonh : MesoNH
+        A MesoNH reader instance.
+    precip_map : Map
+        The Map instance to draw on.
+    """
+    for hour in range(1, 361, 60):
+        inprr = np.zeros(mesonh.longitude.shape)
+        for time_index in range(hour, hour + 59):
+            mesonh.get_data(time_index)
+            # x * 60 : from minutes to hour
+            inprr += mesonh.get_var("INPRR", func=lambda x: x * 60)
 
-for hour in range(1, 361, 60):
-    inprr = np.zeros(mesonh.longitude.shape)
-    for time_index in range(hour, hour + 59):
-        mesonh.get_data(time_index)
-        inprr += mesonh.get_var("INPRR", func=lambda x: x * 60)
-    
-    if inprr.min() < var_min:
-        var_min = inprr.min()
-    if inprr.max() > var_max:
-        var_max = inprr.max()
+        date = datetime.strptime("2022-08-18 00:00:00", "%Y-%m-%d %H:%M:%S") + timedelta(
+            seconds=float(mesonh.data.variables["time"][0])
+        )
 
-    date = datetime.strptime("2022-08-18 00:00:00", "%Y-%m-%d %H:%M:%S") + timedelta(seconds=float(mesonh.data.variables["time"][0]))
-    
-    axes = precip_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
-    cf = precip_map.plot_contourf(inprr * 1000, cmap=cmap, levels=np.linspace(0, 160, 100))
-    cb = plt.colorbar(cf, label="Précipitations accumulées (mm)")
-    cb.set_ticks(np.linspace(0, 160, 8))
-    axes.set_title(f"Simulation Méso-NH du {date} TU (DX = 250 m)\nPrécipitation accumulées sur l'heure")
-    
-    # plt.show()
-    plt.savefig(f"inprr_{date}.png")
+        axes = precip_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
+        # inprr * 1000 : from m to mm
+        contourf = precip_map.plot_contourf(
+            inprr * 1000, cmap=cmap, levels=np.linspace(0, 160, 100)
+        )
+        cbar = plt.colorbar(contourf, label="Précipitations accumulées (mm)")
+        cbar.set_ticks(np.linspace(0, 160, 8))
+        axes.set_title(
+            f"Simulation Méso-NH du {date} TU (DX = 250 m)\nPrécipitation accumulées sur l'heure"
+        )
+
+        plt.savefig(f"inprr_{date}.png")
 
 
-with open("inprr_sum.json", "w") as file:
-    file.write(f"{{\"inprr\" : [{var_min}, {var_max}]}}")
+if __name__ == "__main__":
+    reader = get_mesonh(250)
+    my_map = Map(reader.longitude, reader.latitude)
+    plot_precip(reader, my_map)
