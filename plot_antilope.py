@@ -8,7 +8,7 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 
 from plots import Map
-from readers import Antilope
+from readers import Antilope, get_mesonh
 
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 
@@ -17,7 +17,7 @@ cmap = LinearSegmentedColormap.from_list(
 )
 
 
-def plot_antilope(antilope: Antilope, radar_map: Map, *, zoom: bool = True):
+def plot_antilope(antilope: Antilope, radar_map: Map, *, zoom: str = "all"):
     """
     Plot all the RADAR data and export fig in PNG format.
 
@@ -27,9 +27,16 @@ def plot_antilope(antilope: Antilope, radar_map: Map, *, zoom: bool = True):
         An Antilope reader instance.
     radar_map : Map
         The Map instance to draw on.
-    zoom : bool, keyword-only, optionnal
-        Be default it's set on ``True``. If ``True``, the plot will be focus on Corsica, otherwise,
-        the entire domain is plotted.
+    zoom : str, keyword-only, optionnal
+        Be default it's set on ``all``. Accepted values are:
+
+        * ``all`` : plot all the ANTILOPE domain;
+
+        * ``corsica`` : plots a domain centered on Corsica;
+
+        * ``mesonh`` : plots the same domain as Meso-NH simulation.
+
+        If the given value doesn't match, it plots all the domain.
     """
     for i in range(23):
         plt.close("all")
@@ -39,8 +46,17 @@ def plot_antilope(antilope: Antilope, radar_map: Map, *, zoom: bool = True):
         ) + timedelta(hours=int(antilope.data["time"][17]))
 
         axes = radar_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
-        if zoom:
+        if zoom == "corsica":
             axes.set_extent((2.5, antilope.longitude[-1], antilope.latitude[-1], 45))
+        elif zoom == "mesonh":
+            mesonh = get_mesonh(250)
+            axes.set_extent((
+                mesonh.longitude[0, 0],
+                mesonh.longitude[-1, -1],
+                mesonh.latitude[0, 0],
+                mesonh.latitude[-1, -1]
+            ))
+
 
         axes.set_title(f"Précipitations mesurées par le réseau ANTILOPE\n{date} TU")
         contourf = radar_map.plot_contourf(
@@ -65,4 +81,4 @@ if __name__ == "__main__":
     )
     my_map = Map(reader.longitude, reader.latitude)
 
-    plot_antilope(reader, my_map)
+    plot_antilope(reader, my_map, zoom="mesonh")

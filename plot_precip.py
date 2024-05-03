@@ -17,7 +17,7 @@ cmap = LinearSegmentedColormap.from_list(
 )
 
 
-def plot_precip(mesonh: MesoNH, precip_map: Map):
+def plot_precip(mesonh: MesoNH, precip_map: Map, *, resol_dx: int):
     """
     Plot the accumulated precipitations hour by hour from Meso-NH silulation data and export figs
     in PNG format.
@@ -28,6 +28,8 @@ def plot_precip(mesonh: MesoNH, precip_map: Map):
         A MesoNH reader instance.
     precip_map : Map
         The Map instance to draw on.
+    resol_dx : int, keyword-only
+        The spatial resolution of the given simulation.
     """
     for hour in range(1, 361, 60):
         inprr = np.zeros(mesonh.longitude.shape)
@@ -48,13 +50,22 @@ def plot_precip(mesonh: MesoNH, precip_map: Map):
         cbar = plt.colorbar(contourf, label="Précipitations accumulées (mm)")
         cbar.set_ticks(np.linspace(0, 160, 8))
         axes.set_title(
-            f"Simulation Méso-NH du {date} TU (DX = 250 m)\nPrécipitation accumulées sur l'heure"
+            f"Simulation Méso-NH du {date} TU (DX = {resol_dx} m)\n"
+            "Précipitation accumulées sur l'heure"
         )
 
-        plt.savefig(f"inprr_{date}.png")
+        plt.savefig(f"inprr_{date}_{resol_dx}m.png")
 
 
 if __name__ == "__main__":
     reader = get_mesonh(250)
     my_map = Map(reader.longitude, reader.latitude)
-    plot_precip(reader, my_map)
+    plot_precip(reader, my_map, resol_dx=250)
+
+    reader = get_mesonh(500)
+    my_map = Map(reader.longitude, reader.latitude)
+    plot_precip(reader, my_map, resol_dx=500)
+
+    reader = get_mesonh(1000)
+    my_map = Map(reader.longitude, reader.latitude)
+    plot_precip(reader, my_map, resol_dx=1000)
