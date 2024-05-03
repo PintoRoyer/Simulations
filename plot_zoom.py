@@ -8,9 +8,9 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 
 from plots import Map
-from readers import MesoNH, get_mesonh, index_to_lonlat
+from readers import MesoNH, get_mesonh, index_to_lonlat, lonlat_to_index
 
-plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
+plt.rcParams.update({"text.usetex": False, "font.size": 15})
 
 
 def sum_clouds(thcw, thrw, thic, thsn, thgr):
@@ -42,7 +42,7 @@ def get_time_index(hour: int, minute: int):
     return (hour - 4) * 60 + (minute - 1)
 
 
-def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: int):
+def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: int, ):
     """
     Plot zoomed-in maps for clouds, pressure and wind at a given resolution.
 
@@ -115,7 +115,10 @@ def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: i
     plt.savefig(f"clouds_{time}_{zoom}_{resol_dx}m.png")
 
     # Wind speed
-    axes = my_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
+    axes = my_map.init_axes(
+        fig_kw={"figsize": (8, 5), "layout": "compressed"},
+        feature_kw={"color": "black"}
+    )[1]
     axes.set_extent([lon[0], lon[1], lat[0], lat[1]])
     var = mesonh.get_var("WIND10", func=lambda x: x * 3.6)
     contourf = my_map.plot_contourf(
@@ -139,22 +142,30 @@ def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: i
     cbar.set_ticks(np.linspace(lim["wind"][0], lim["wind"][1], 8))
 
     # Wind direction
-    mesh = 25
-    if resol_dx == 500:
-        mesh = 12
-    elif resol_dx == 1000:
-        mesh = 6
+    if i_lim == (0, -1):
+        kwargs = {"scale" : 40}
+            
+    else:
+        mesh = 25
+        if resol_dx == 500:
+            mesh = 12
+        elif resol_dx == 1000:
+            mesh = 6
+        kwargs = {
+            "x_mesh": mesh,
+            "y_mesh": mesh,
+            "width": 0.005,
+            "scale": 20,
+            "scale_units": "xy",
+            "units": "xy"
+        }
+        
 
     wind_u, wind_v = mesonh.get_var("UM10", "VM10", "WIND10", func=norm_wind)
     my_map.plot_quiver(
         wind_u,
         wind_v,
-        x_mesh=mesh,
-        y_mesh=mesh,
-        width=0.005,
-        scale=20,
-        scale_units="xy",
-        units="xy",
+        **kwargs
     )
     plt.savefig(f"wind_{time}_{zoom}_{resol_dx}m.png")
 
@@ -246,6 +257,15 @@ if __name__ == "__main__":
         ((1440, 1790), (1530, 1730), 8, 15),
         ((1470, 1940), (1650, 1930), 8, 45),
     )
+    
+    dx500_zoom = (
+        ((304 , 434), (244 , 694), 5, 0),
+        ((490 , 615), (519 , 688), 6, 30),
+        ((490 , 688), (604 , 770), 7, 0),
+        ((578 , 728), (615 , 752), 7, 15),
+        ((670 , 896), (769 , 869), 8, 15),
+        ((718 , 970), (790 , 960), 8, 45),
+    )
 
     dx1000_zoom = (
         ((148, 215), (123, 348), 5, 0),
@@ -256,7 +276,7 @@ if __name__ == "__main__":
         ((383, 483), (414, 472), 8, 45),
     )
 
-    dx1000 = (
+    no_zoom = (
         ((0, -1), (0, -1), 5, 0),
         ((0, -1), (0, -1), 6, 30),
         ((0, -1), (0, -1), 7, 0),
@@ -265,10 +285,11 @@ if __name__ == "__main__":
         ((0, -1), (0, -1), 8, 45),
     )
 
-    run_all(250, dx250_zoom, plot=True)
+    run_all(1000, no_zoom, plot=True)
 
     # mesonh250 = get_mesonh(250)
+    # mesonh500 = get_mesonh(500)
     # mesonh1000 = get_mesonh(1000)
-    # lon_lim, lat_lim = index_to_lonlat(mesonh250, (1470, 1940), (1650, 1930))
-    # i_lim, j_lim = lonlat_to_index(mesonh250, lon_lim, lat_lim)
+    # lon_lim, lat_lim = index_to_lonlat(mesonh1000, (383, 483), (414, 472))
+    # i_lim, j_lim = lonlat_to_index(mesonh500, lon_lim, lat_lim)
     # print(i_lim, j_lim)

@@ -210,9 +210,9 @@ class Map:
         x_size = len(x_var_array[0])
         y_size = len(x_var_array[:, 0])
         if not x_mesh:
-            x_mesh = x_size // 50
+            x_mesh = x_size // 30
         if not y_mesh:
-            y_mesh = y_size // 50
+            y_mesh = y_size // 30
 
         quiver = self.axes.quiver(
             self.longitude[::y_mesh, ::x_mesh],
