@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 from plots import TemporalProfile
-from readers import MesoNH, get_index, get_mesonh
+from readers import MesoNH, get_mesonh, lonlat_to_index
 
 
 def show_station(mesonh: MesoNH, lon: float, lat: float, name: str, lons, lats):
@@ -46,7 +46,9 @@ def show_station(mesonh: MesoNH, lon: float, lat: float, name: str, lons, lats):
         xy = [lons[0], lats[0]],
         width=lons[1] - lons[0],
         height=lats[1] - lats[0],
+        edgecolor="black",
         facecolor="black",
+        alpha=0.5,
         transform=ccrs.PlateCarree()
     ))
     # axes.add_patch(mpatches.Rectangle(
@@ -95,8 +97,7 @@ def get_wind10(lon: float, lat: float, resol_dx: int):
         A list that contains one average value for each hour.
     """
     mesonh = get_mesonh(resol_dx)
-    i = get_index(mesonh.longitude, lon)[1]
-    j = get_index(mesonh.latitude, lat)[0]
+    i, j = lonlat_to_index(mesonh, lon, lat)
 
     wind10 = []
     for time in range(61, len(mesonh.files) + 1, 60):
@@ -124,8 +125,7 @@ def get_pressure(lon: float, lat: float, resol_dx: int):
         A list that contains one average value for each hour.
     """
     mesonh = get_mesonh(resol_dx)
-    i = get_index(mesonh.longitude, lon)[1]
-    j = get_index(mesonh.latitude, lat)[0]
+    i, j = lonlat_to_index(mesonh, lon, lat)
 
     pressure = []
     for time in range(1, 361, 60):
@@ -220,12 +220,6 @@ def plot_pressure(name: str):
     plt.show()
 
 
-
-def new_get_index(array, target):
-    delta = np.abs(array - target)
-    return np.array(np.where(delta == delta.min())).transpose()
-
-
 if __name__ == "__main__":
     # plot_pressure("cap corse")
 
@@ -234,14 +228,11 @@ if __name__ == "__main__":
     lat, lon = pos_stations["cap corse"]
     mesonh = get_mesonh(250)
 
-    i = get_index(mesonh.longitude, lon)[1]
-    j = get_index(mesonh.latitude, lat)[0]
+    i, j = lonlat_to_index(mesonh, lon, lat)
 
-    size = 1
+    size = 100
     lons = mesonh.longitude[j - size, i - size], mesonh.longitude[j + size, i + size]
     lats = mesonh.latitude[j - size, i - size], mesonh.latitude[j + size, i + size]
-
-
 
     show_station(mesonh, lon, lat, "cap corse", lons, lats)
     plt.show()

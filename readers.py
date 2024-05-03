@@ -298,7 +298,7 @@ class Antilope:
 
             args = []
             for varname in varnames:
-                args.append(data.variables[varname][0])
+                args.append(data.variables[varname][self.day_index])
             result = func(*args)
 
             current_min = result.min()
@@ -399,7 +399,7 @@ class Satellite:
 
             args = []
             for varname in varnames:
-                args.append(data.variables[varname][0])
+                args.append(data.variables[varname][self.time_step])
             result = func(*args)
 
             current_min = result.min()
@@ -459,7 +459,13 @@ def get_index(array: np.array, target):
     return index[:, 0]
 
 
-def index_to_lonlat(reader, i_lim: tuple, j_lim: tuple):
+def get_index_from_vect(x_array, y_array, value):
+    norms = np.sqrt((x_array - value[0])**2 + (y_array - value[1])**2)
+    index = np.array(np.where(norms == norms.min()))
+    return index[:, 0]
+
+
+def index_to_lonlat(reader, i: int, j: int):
     """
     Get the longitudes and latitudes from given limits indexes.
 
@@ -478,14 +484,12 @@ def index_to_lonlat(reader, i_lim: tuple, j_lim: tuple):
         A tuple that contains two tuples: ``(longitude_min, longitude_max)`` and
         ``(latitude_min, latitude_max)``.
     """
-    lon_min = reader.longitude[j_lim[0], i_lim[0]]
-    lon_max = reader.longitude[j_lim[1], i_lim[1]]
-    lat_min = reader.latitude[j_lim[0], i_lim[0]]
-    lat_max = reader.latitude[j_lim[1], i_lim[1]]
-    return ((lon_min, lon_max), (lat_min, lat_max))
+    lon = reader.longitude[j, i]
+    lat = reader.latitude[j, i]
+    return (lon, lat)
 
 
-def lonlat_to_index(reader, lon_lim: tuple, lat_lim: tuple):
+def lonlat_to_index(reader, lon: float, lat: float):
     """
     Get the indexes from given limit longitudes and latitudes.
 
@@ -506,8 +510,5 @@ def lonlat_to_index(reader, lon_lim: tuple, lat_lim: tuple):
     out : tuple
         A tuple that contains two tuples: ``(i_min, i_max)`` and ``(j_min, j_max)``.
     """
-    i_min = get_index(reader.longitude, lon_lim[0])[1]
-    i_max = get_index(reader.longitude, lon_lim[1])[1]
-    j_min = get_index(reader.latitude, lat_lim[0])[0]
-    j_max = get_index(reader.latitude, lat_lim[1])[0]
-    return ((i_min, i_max), (j_min, j_max))
+    j, i =  get_index_from_vect(reader.longitude, reader.latitude, (lon, lat))
+    return i, j
