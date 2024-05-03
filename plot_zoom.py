@@ -65,7 +65,10 @@ def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: i
     my_map = Map(mesonh.longitude, mesonh.latitude)
 
     # Information on zoom
-    lon, lat = index_to_lonlat(mesonh, i_lim, j_lim)
+    lon = [0, 0]  # bornes min max lon
+    lat = [0, 0]  # bornes min max lat
+    lon[0], lat[0] = index_to_lonlat(mesonh, i_lim[0], j_lim[0])
+    lon[1], lat[1] = index_to_lonlat(mesonh, i_lim[1], j_lim[1])
     print(f"{time}\n" + len(time) * "-")
     print("Longitude")
     print(f".. {(lon[0]), lon[1]}°E")
@@ -285,7 +288,7 @@ if __name__ == "__main__":
         ((0, -1), (0, -1), 8, 45),
     )
 
-    run_all(1000, no_zoom, plot=True)
+    run_all(500, dx500_zoom, plot=True)
 
     # mesonh250 = get_mesonh(250)
     # mesonh500 = get_mesonh(500)
