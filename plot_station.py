@@ -3,15 +3,17 @@
 
 import json
 
+import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 from plots import TemporalProfile
 from readers import MesoNH, get_index, get_mesonh
 
 
-def show_station(mesonh: MesoNH, lon: float, lat: float, name: str):
+def show_station(mesonh: MesoNH, lon: float, lat: float, name: str, lons, lats):
     """
     Show the given name on a map on the given coordinates.
 
@@ -25,6 +27,8 @@ def show_station(mesonh: MesoNH, lon: float, lat: float, name: str):
         The targeted latitude.
     name : str
         The text to display at the given coordinates.
+    size : int, optionnal
+        The size of the spatial average.
     """
     plt.figure()
     axes = plt.axes(projection=ccrs.PlateCarree())
@@ -38,12 +42,29 @@ def show_station(mesonh: MesoNH, lon: float, lat: float, name: str):
             mesonh.latitude.max(),
         )
     )
+    axes.add_patch(mpatches.Rectangle(
+        xy = [lons[0], lats[0]],
+        width=lons[1] - lons[0],
+        height=lats[1] - lats[0],
+        facecolor="black",
+        transform=ccrs.PlateCarree()
+    ))
+    # axes.add_patch(mpatches.Rectangle(
+    #     xy = [9.35639, 43.00165],
+    #     width=0.00610,
+    #     height=0.00550,
+    #     facecolor="black",
+    #     alpha=0.75,
+    #     transform=ccrs.PlateCarree()
+    # ))
 
     glines = axes.gridlines(draw_labels=True, linewidth=0.5, alpha=0.5)
     glines.top_labels = glines.right_labels = False
 
     axes.plot(lon, lat, ".", color="black", transform=ccrs.PlateCarree())
     axes.text(lon, lat, name.title(), color="black")
+
+    return axes
 
 
 def get_wind10(lon: float, lat: float, resol_dx: int):
@@ -199,5 +220,28 @@ def plot_pressure(name: str):
     plt.show()
 
 
+
+def new_get_index(array, target):
+    delta = np.abs(array - target)
+    return np.array(np.where(delta == delta.min())).transpose()
+
+
 if __name__ == "__main__":
-    plot_pressure("cap corse")
+    # plot_pressure("cap corse")
+
+    with open("../Donnees/stations/stations.json", "r", encoding="utf-8") as file:
+        pos_stations = json.loads(file.read())
+    lat, lon = pos_stations["cap corse"]
+    mesonh = get_mesonh(250)
+
+    i = get_index(mesonh.longitude, lon)[1]
+    j = get_index(mesonh.latitude, lat)[0]
+
+    size = 1
+    lons = mesonh.longitude[j - size, i - size], mesonh.longitude[j + size, i + size]
+    lats = mesonh.latitude[j - size, i - size], mesonh.latitude[j + size, i + size]
+
+
+
+    show_station(mesonh, lon, lat, "cap corse", lons, lats)
+    plt.show()
