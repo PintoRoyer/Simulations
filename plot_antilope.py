@@ -9,6 +9,8 @@ from matplotlib.colors import LinearSegmentedColormap
 
 from plots import Map
 from readers import Antilope, get_mesonh
+from plot_stations import all_stations_on_axes
+
 
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 

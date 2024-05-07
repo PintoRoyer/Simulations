@@ -109,7 +109,7 @@ class MesoNH:
 
         return func(*args)
 
-    def get_mean(
+    def get_stats(
         self,
         index_i: int,
         index_j: int,
@@ -119,8 +119,12 @@ class MesoNH:
         size: int = 1,
     ):
         """
-        Compute a spatio-temporal average over a group of pixel centered on a given position and
-        over a given time range.
+        Compute spatio-temporal limits average and standard deviation over a group of pixel centered
+        on a given position and over a given time range.
+
+        .. note:
+            The standard deviation is calculated for each time step and it returns the average
+            standard deviation.
 
         Parameters
         ----------
@@ -135,7 +139,6 @@ class MesoNH:
         t_range : iter, keyword-only, optionnal
             The temporal range over wich the average is to be calculated. By default all the
             available time interval will be taken.
-
             You can give a ``range`` or the list of the index you want.
         size : int, keyword-only, optionnal
             The size of the spatial average in index. By default it's set on ``1``, so the average
@@ -154,13 +157,15 @@ class MesoNH:
 
         Returns
         -------
-        out : float
-            The computed average.
+        out : tuple
+            A tuple that contains the limits, the average and the standard deviation.
         """
         if not t_range:
             t_range = range(0, len(self.files))
 
         mean_per_timestep = []
+        std_per_timestep = []
+        var_min, var_max = np.inf, -np.inf
         for i in t_range:
             data = Dataset(self.files[i])
 
@@ -168,11 +173,17 @@ class MesoNH:
             for varname in varnames:
                 args.append(data.variables[varname][0])
             array = func(*args)
+            array = array[index_j - size : index_j + size, index_i - size : index_i + size]
 
-            mean_per_timestep.append(
-                np.mean(array[index_j - size : index_j + size, index_i - size : index_i + size])
-            )
-        return np.mean(mean_per_timestep)
+            if var_min > array.min():
+                var_min = array.min()
+            if var_max < array.max():
+                var_max = array.max()
+
+            mean_per_timestep.append(np.mean(array))
+            std_per_timestep.append(np.std(array))
+
+        return (var_min, var_max), np.mean(mean_per_timestep), np.mean(std_per_timestep)
 
     def get_limits(self, *varnames, func: callable = lambda x: x):
         """

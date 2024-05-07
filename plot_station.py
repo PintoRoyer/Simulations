@@ -15,6 +15,26 @@ from readers import MesoNH, get_mesonh, lonlat_to_index
 
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 
+
+def get_all_stations():
+    with open("../Donnees/stations/stations.json", "r", encoding="utf-8") as file:
+        stations = json.loads(file.read())
+    return stations
+
+
+def all_stations_on_axes(axes: plt.Axes, dlon: float = 0, dlat: float = 0):
+    stations = get_all_stations()
+
+    for name in stations:
+        lat, lon = stations[name]
+        station_on_axes(axes, lon + dlon, lat + dlat, name)
+
+
+def station_on_axes(axes: plt.Axes, lon: float, lat: float, name: str):
+    axes.plot(lon, lat, "o", color="red", transform=ccrs.PlateCarree())
+    axes.text(lon, lat, f"\\textbf{{{name.title()}}}", color="black")
+
+
 def show_stations(mesonh_avg: bool = False):
     """
     Show the given name on a map on the given coordinates.
@@ -43,13 +63,11 @@ def show_stations(mesonh_avg: bool = False):
     mesonh = get_mesonh(250)
     axes.set_extent((8.189, 10.13, 41.21, 43.45))
 
-    with open("../Donnees/stations/stations.json", "r", encoding="utf-8") as file:
-        pos_stations = json.loads(file.read())
+    stations = get_all_stations()
 
-    for name in pos_stations:
-        lat, lon = pos_stations[name]
-        axes.plot(lon, lat, "o", color="red", transform=ccrs.PlateCarree())
-        axes.text(lon, lat, f"\\textbf{{{name.title()}}}", color="black")
+    for name in stations:
+        lat, lon = stations[name]
+        station_on_axes(axes, lon, lat, name)
 
         if mesonh_avg:
             i, j = lonlat_to_index(mesonh, lon, lat)
@@ -86,12 +104,10 @@ def show_station(name: str):
         mesonh.latitude[-1, -1],
     ))
 
-    with open("../Donnees/stations/stations.json", "r", encoding="utf-8") as file:
-        pos_stations = json.loads(file.read())
+    stations = get_all_stations()
 
-    lat, lon = pos_stations[name]
-    axes.plot(lon, lat, "o", color="red", transform=ccrs.PlateCarree())
-    axes.text(lon, lat, f"\\textbf{{{name.title()}}}", color="black")
+    lat, lon = stations[name]
+    station_on_axes(axes, lon, lat, name)
 
     for resol_dx, size, color in ((250, 4, "C0"), (500, 2, "C1"), (1000, 1, "C2")):
         mesonh = get_mesonh(resol_dx)
@@ -145,11 +161,24 @@ def get_wind10(lon: float, lat: float, resol_dx: int):
     i, j = lonlat_to_index(mesonh, lon, lat)
 
     wind10 = []
-    for time in range(61, len(mesonh.files) + 1, 60):
-        wind10.append(
-            3.6 * mesonh.get_mean(i, j, "WIND10", t_range=range(time - 10, time + 1), size=size)
+    wind10_std = []
+    for time in range(60, len(mesonh.files) + 1, 6):
+        limits, mean, std = mesonh.get_stats(
+            i, j,
+            "WIND10",
+            func=lambda x: x * 3.6,
+            t_range=range(time - 11, time),
+            size=size
         )
-    return wind10
+        print(f"{str(time // 60 + 4).zfill(2)}h{str(time % 60).zfill(2)} TU")
+        print(f".. limites    : {limits[0]:.2f} km/h -- {limits[1]:.2f} km/h")
+        print(f".. moyenne    : {mean:.2f} km/h")
+        print(f".. écart-type : {std:.2f} km/h")
+        wind10.append(mean)
+        wind10_std.append(std)
+
+    print()
+    return wind10, wind10_std
 
 
 def get_pressure(lon: float, lat: float, resol_dx: int):
@@ -174,11 +203,21 @@ def get_pressure(lon: float, lat: float, resol_dx: int):
     mesonh = get_mesonh(resol_dx)
     size = 1000 // resol_dx
     i, j = lonlat_to_index(mesonh, lon, lat)
-
+    
     pressure = []
-    for time in range(1, 361, 60):
-        pressure.append(mesonh.get_mean(i, j, "MSLP", t_range=(time,), size=size))
-    return pressure
+    pressure_std = []
+    for time in range(1, len(mesonh.files) + 1, 6):
+        limits, mean, std = mesonh.get_stats(i, j, "MSLP", t_range=(time,), size=size)
+        
+        print(f"{str(time // 60 + 4).zfill(2)}h{str(time % 60).zfill(2)} TU")
+        print(f".. limites    : {limits[0]:.2f} hPa -- {limits[1]:.2f} hPa")
+        print(f".. moyenne    : {mean:.2f} hpa")
+        print(f".. écart-type : {std:.2f} hpa")
+        pressure.append(mean)
+        pressure_std.append(std)
+
+    print()
+    return pressure, pressure_std
 
 
 def plot_wind(name: str):
@@ -202,19 +241,25 @@ def plot_wind(name: str):
     """
     plt.close("all")
 
-    with open("../Donnees/stations/stations.json", "r", encoding="utf-8") as file:
-        pos_stations = json.loads(file.read())
-    lat, lon = pos_stations[name]
+    stations = get_all_stations()
+    lat, lon = stations[name]
 
     axes = plt.subplots(figsize=(8, 5), layout="compressed")[1]
 
     for resol_dx in (250, 500, 1000):
-        axes.plot(
-            range(5, 10), get_wind10(lon, lat, resol_dx), label=f"Simulation\nDX = {resol_dx} m"
+        taïtôl = f"Vent {name.title()} DX = {resol_dx} m"
+        print(f"{taïtôl}\n" + len(taïtôl) * "-")
+        mean, std = get_wind10(lon, lat, resol_dx)
+        axes.errorbar(
+            np.arange(5, 10.1, 0.1),
+            mean,
+            yerr=std,
+            fmt="o",
+            label=f"Simulation\nDX = {resol_dx} m"
         )
 
     data = pd.read_csv(f"../Donnees/stations/{name}.csv", delimiter=";")
-    axes.plot((data["heure"] - 2)[2: ], data["vent"][2: ], label=f"{name.title()}")
+    axes.plot((data["heure"] - 2)[6: 14], data["vent"][6: 14], label=f"{name.title()}")
     axes.grid("on")
 
     axes.set_xlabel("Heure (TU)")
@@ -245,19 +290,26 @@ def plot_pressure(name: str):
     """
     plt.close("all")
 
-    with open("../Donnees/stations/stations.json", "r", encoding="utf-8") as file:
-        pos_stations = json.loads(file.read())
-    lat, lon = pos_stations[name]
+    stations = get_all_stations()
+    lat, lon = stations[name]
 
     axes = plt.subplots(figsize=(8, 5), layout="compressed")[1]
 
     for resol_dx in (250, 500, 1000):
-        axes.plot(
-            range(4, 10), get_pressure(lon, lat, resol_dx), label=f"Simulation\nDX = {resol_dx} m"
+        taïtôl = f"Pression {name.title()} DX = {resol_dx} m"
+        print(f"{taïtôl}\n" + len(taïtôl) * "-")
+        mean, std = get_pressure(lon, lat, resol_dx)
+        print("DEBUG", len(mean), len(np.arange(4, 10, 0.1)))
+        axes.errorbar(
+            np.arange(4, 10, 0.1),
+            mean,
+            yerr=std,
+            fmt="o",
+            label=f"Simulation\nDX = {resol_dx} m"
         )
 
     data = pd.read_csv(f"../Donnees/stations/{name}.csv", delimiter=";")
-    axes.plot((data["heure"] - 2)[2: ], data["pression"][2: ], label=f"{name.title()}")
+    axes.plot((data["heure"] - 2)[5: 14], data["pression"][5: 14], label=f"{name.title()}")
     axes.grid("on")
 
     axes.set_xlabel("Heure (TU)")
@@ -268,13 +320,7 @@ def plot_pressure(name: str):
     plt.savefig(f"{name}_pressure.png")
 
 
-def get_all_stations():
-    with open("../Donnees/stations/stations.json", "r", encoding="utf-8") as file:
-        pos_stations = json.loads(file.read())
-    return list(pos_stations.keys())
-
-
 if __name__ == "__main__":
-    for name in get_all_stations():
+    for name in list(get_all_stations().keys()):
         plot_wind(name)
         plot_pressure(name)
