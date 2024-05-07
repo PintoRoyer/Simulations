@@ -1,0 +1,1050 @@
+Vent Cap Corse DX = 250 m
+-------------------------
+05h01 TU
+.. limites    : 16.76 km/h -- 50.30 km/h
+.. moyenne    : 31.16 km/h
+.. écart-type : 6.65 km/h
+06h01 TU
+.. limites    : 15.40 km/h -- 45.93 km/h
+.. moyenne    : 26.91 km/h
+.. écart-type : 5.84 km/h
+07h01 TU
+.. limites    : 9.26 km/h -- 32.81 km/h
+.. moyenne    : 18.03 km/h
+.. écart-type : 4.41 km/h
+08h01 TU
+.. limites    : 14.87 km/h -- 36.80 km/h
+.. moyenne    : 24.02 km/h
+.. écart-type : 4.51 km/h
+09h01 TU
+.. limites    : 8.03 km/h -- 51.72 km/h
+.. moyenne    : 22.56 km/h
+.. écart-type : 6.25 km/h
+
+Vent Cap Corse DX = 500 m
+-------------------------
+05h01 TU
+.. limites    : 24.65 km/h -- 51.03 km/h
+.. moyenne    : 34.14 km/h
+.. écart-type : 4.76 km/h
+06h01 TU
+.. limites    : 20.85 km/h -- 43.40 km/h
+.. moyenne    : 29.89 km/h
+.. écart-type : 4.79 km/h
+07h01 TU
+.. limites    : 18.60 km/h -- 35.11 km/h
+.. moyenne    : 24.58 km/h
+.. écart-type : 3.49 km/h
+08h01 TU
+.. limites    : 16.10 km/h -- 32.08 km/h
+.. moyenne    : 22.46 km/h
+.. écart-type : 2.70 km/h
+09h01 TU
+.. limites    : 10.28 km/h -- 33.41 km/h
+.. moyenne    : 19.90 km/h
+.. écart-type : 3.55 km/h
+
+Vent Cap Corse DX = 1000 m
+--------------------------
+05h01 TU
+.. limites    : 30.07 km/h -- 40.12 km/h
+.. moyenne    : 34.80 km/h
+.. écart-type : 3.35 km/h
+06h01 TU
+.. limites    : 22.97 km/h -- 33.74 km/h
+.. moyenne    : 28.68 km/h
+.. écart-type : 2.62 km/h
+07h01 TU
+.. limites    : 20.30 km/h -- 27.91 km/h
+.. moyenne    : 24.30 km/h
+.. écart-type : 2.23 km/h
+08h01 TU
+.. limites    : 21.55 km/h -- 29.43 km/h
+.. moyenne    : 25.49 km/h
+.. écart-type : 2.71 km/h
+09h01 TU
+.. limites    : 15.96 km/h -- 64.95 km/h
+.. moyenne    : 37.55 km/h
+.. écart-type : 3.27 km/h
+
+Pression Cap Corse DX = 250 m
+-----------------------------
+04h01 TU
+.. limites    : 1005.02 hPa -- 1006.07 hPa
+.. moyenne    : 1005.73 hpa
+.. écart-type : 0.28 hpa
+05h01 TU
+.. limites    : 1005.35 hPa -- 1006.38 hPa
+.. moyenne    : 1006.00 hpa
+.. écart-type : 0.27 hpa
+06h01 TU
+.. limites    : 1005.20 hPa -- 1006.32 hPa
+.. moyenne    : 1005.90 hpa
+.. écart-type : 0.27 hpa
+07h01 TU
+.. limites    : 1005.27 hPa -- 1005.96 hPa
+.. moyenne    : 1005.73 hpa
+.. écart-type : 0.19 hpa
+08h01 TU
+.. limites    : 1003.65 hPa -- 1004.50 hPa
+.. moyenne    : 1004.16 hpa
+.. écart-type : 0.19 hpa
+09h01 TU
+.. limites    : 1006.15 hPa -- 1007.31 hPa
+.. moyenne    : 1006.94 hpa
+.. écart-type : 0.26 hpa
+
+Pression Cap Corse DX = 500 m
+-----------------------------
+04h01 TU
+.. limites    : 1005.42 hPa -- 1006.11 hPa
+.. moyenne    : 1005.75 hpa
+.. écart-type : 0.22 hpa
+05h01 TU
+.. limites    : 1005.41 hPa -- 1006.10 hPa
+.. moyenne    : 1005.70 hpa
+.. écart-type : 0.20 hpa
+06h01 TU
+.. limites    : 1005.65 hPa -- 1006.21 hPa
+.. moyenne    : 1005.86 hpa
+.. écart-type : 0.15 hpa
+07h01 TU
+.. limites    : 1005.53 hPa -- 1005.97 hPa
+.. moyenne    : 1005.69 hpa
+.. écart-type : 0.12 hpa
+08h01 TU
+.. limites    : 1003.99 hPa -- 1004.58 hPa
+.. moyenne    : 1004.25 hpa
+.. écart-type : 0.17 hpa
+09h01 TU
+.. limites    : 1005.98 hPa -- 1006.59 hPa
+.. moyenne    : 1006.23 hpa
+.. écart-type : 0.19 hpa
+
+Pression Cap Corse DX = 1000 m
+------------------------------
+04h01 TU
+.. limites    : 1003.78 hPa -- 1004.16 hPa
+.. moyenne    : 1004.00 hpa
+.. écart-type : 0.15 hpa
+05h01 TU
+.. limites    : 1004.23 hPa -- 1004.46 hPa
+.. moyenne    : 1004.34 hpa
+.. écart-type : 0.08 hpa
+06h01 TU
+.. limites    : 1004.24 hPa -- 1004.40 hPa
+.. moyenne    : 1004.32 hpa
+.. écart-type : 0.07 hpa
+07h01 TU
+.. limites    : 1004.03 hPa -- 1004.19 hPa
+.. moyenne    : 1004.11 hpa
+.. écart-type : 0.06 hpa
+08h01 TU
+.. limites    : 1002.77 hPa -- 1003.01 hPa
+.. moyenne    : 1002.89 hpa
+.. écart-type : 0.08 hpa
+09h01 TU
+.. limites    : 1005.95 hPa -- 1006.46 hPa
+.. moyenne    : 1006.23 hpa
+.. écart-type : 0.23 hpa
+
+Vent Ile Rousse DX = 250 m
+--------------------------
+05h01 TU
+.. limites    : 0.57 km/h -- 16.06 km/h
+.. moyenne    : 7.78 km/h
+.. écart-type : 2.47 km/h
+06h01 TU
+.. limites    : 0.19 km/h -- 12.12 km/h
+.. moyenne    : 6.85 km/h
+.. écart-type : 1.48 km/h
+07h01 TU
+.. limites    : 0.18 km/h -- 9.91 km/h
+.. moyenne    : 3.48 km/h
+.. écart-type : 1.69 km/h
+08h01 TU
+.. limites    : 15.33 km/h -- 96.89 km/h
+.. moyenne    : 53.54 km/h
+.. écart-type : 10.38 km/h
+09h01 TU
+.. limites    : 15.11 km/h -- 42.21 km/h
+.. moyenne    : 26.94 km/h
+.. écart-type : 5.38 km/h
+
+Vent Ile Rousse DX = 500 m
+--------------------------
+05h01 TU
+.. limites    : 3.07 km/h -- 15.60 km/h
+.. moyenne    : 7.29 km/h
+.. écart-type : 2.25 km/h
+06h01 TU
+.. limites    : 0.61 km/h -- 14.02 km/h
+.. moyenne    : 5.59 km/h
+.. écart-type : 2.20 km/h
+07h01 TU
+.. limites    : 0.41 km/h -- 17.39 km/h
+.. moyenne    : 4.95 km/h
+.. écart-type : 2.16 km/h
+08h01 TU
+.. limites    : 8.42 km/h -- 87.25 km/h
+.. moyenne    : 51.89 km/h
+.. écart-type : 6.21 km/h
+09h01 TU
+.. limites    : 17.71 km/h -- 36.78 km/h
+.. moyenne    : 25.43 km/h
+.. écart-type : 4.41 km/h
+
+Vent Ile Rousse DX = 1000 m
+---------------------------
+05h01 TU
+.. limites    : 0.96 km/h -- 11.80 km/h
+.. moyenne    : 6.90 km/h
+.. écart-type : 2.03 km/h
+06h01 TU
+.. limites    : 1.57 km/h -- 8.53 km/h
+.. moyenne    : 4.69 km/h
+.. écart-type : 1.51 km/h
+07h01 TU
+.. limites    : 0.79 km/h -- 6.42 km/h
+.. moyenne    : 3.67 km/h
+.. écart-type : 1.11 km/h
+08h01 TU
+.. limites    : 10.12 km/h -- 66.11 km/h
+.. moyenne    : 34.88 km/h
+.. écart-type : 2.16 km/h
+09h01 TU
+.. limites    : 12.98 km/h -- 23.33 km/h
+.. moyenne    : 16.98 km/h
+.. écart-type : 1.95 km/h
+
+Pression Ile Rousse DX = 250 m
+------------------------------
+04h01 TU
+.. limites    : 1005.01 hPa -- 1005.16 hPa
+.. moyenne    : 1005.11 hpa
+.. écart-type : 0.04 hpa
+05h01 TU
+.. limites    : 1005.63 hPa -- 1005.80 hPa
+.. moyenne    : 1005.74 hpa
+.. écart-type : 0.04 hpa
+06h01 TU
+.. limites    : 1005.25 hPa -- 1005.45 hPa
+.. moyenne    : 1005.35 hpa
+.. écart-type : 0.05 hpa
+07h01 TU
+.. limites    : 1004.38 hPa -- 1004.63 hPa
+.. moyenne    : 1004.52 hpa
+.. écart-type : 0.07 hpa
+08h01 TU
+.. limites    : 1009.00 hPa -- 1011.12 hPa
+.. moyenne    : 1010.15 hpa
+.. écart-type : 0.49 hpa
+09h01 TU
+.. limites    : 1008.23 hPa -- 1008.63 hPa
+.. moyenne    : 1008.45 hpa
+.. écart-type : 0.10 hpa
+
+Pression Ile Rousse DX = 500 m
+------------------------------
+04h01 TU
+.. limites    : 1005.11 hPa -- 1005.22 hPa
+.. moyenne    : 1005.18 hpa
+.. écart-type : 0.04 hpa
+05h01 TU
+.. limites    : 1005.55 hPa -- 1005.72 hPa
+.. moyenne    : 1005.61 hpa
+.. écart-type : 0.06 hpa
+06h01 TU
+.. limites    : 1005.11 hPa -- 1005.32 hPa
+.. moyenne    : 1005.22 hpa
+.. écart-type : 0.07 hpa
+07h01 TU
+.. limites    : 1004.73 hPa -- 1004.88 hPa
+.. moyenne    : 1004.80 hpa
+.. écart-type : 0.04 hpa
+08h01 TU
+.. limites    : 1010.81 hPa -- 1011.64 hPa
+.. moyenne    : 1011.19 hpa
+.. écart-type : 0.23 hpa
+09h01 TU
+.. limites    : 1008.14 hPa -- 1008.29 hPa
+.. moyenne    : 1008.22 hpa
+.. écart-type : 0.05 hpa
+
+Pression Ile Rousse DX = 1000 m
+-------------------------------
+04h01 TU
+.. limites    : 1002.07 hPa -- 1002.51 hPa
+.. moyenne    : 1002.27 hpa
+.. écart-type : 0.17 hpa
+05h01 TU
+.. limites    : 1004.43 hPa -- 1004.49 hPa
+.. moyenne    : 1004.47 hpa
+.. écart-type : 0.02 hpa
+06h01 TU
+.. limites    : 1003.69 hPa -- 1003.80 hPa
+.. moyenne    : 1003.75 hpa
+.. écart-type : 0.04 hpa
+07h01 TU
+.. limites    : 1003.54 hPa -- 1003.64 hPa
+.. moyenne    : 1003.59 hpa
+.. écart-type : 0.04 hpa
+08h01 TU
+.. limites    : 1008.24 hPa -- 1008.48 hPa
+.. moyenne    : 1008.38 hpa
+.. écart-type : 0.10 hpa
+09h01 TU
+.. limites    : 1006.77 hPa -- 1006.92 hPa
+.. moyenne    : 1006.83 hpa
+.. écart-type : 0.06 hpa
+
+Vent Calvi DX = 250 m
+---------------------
+05h01 TU
+.. limites    : 0.09 km/h -- 12.54 km/h
+.. moyenne    : 5.16 km/h
+.. écart-type : 2.57 km/h
+06h01 TU
+.. limites    : 0.22 km/h -- 9.37 km/h
+.. moyenne    : 4.56 km/h
+.. écart-type : 1.95 km/h
+07h01 TU
+.. limites    : 0.14 km/h -- 10.23 km/h
+.. moyenne    : 3.80 km/h
+.. écart-type : 1.48 km/h
+08h01 TU
+.. limites    : 18.35 km/h -- 53.00 km/h
+.. moyenne    : 29.53 km/h
+.. écart-type : 3.59 km/h
+09h01 TU
+.. limites    : 10.34 km/h -- 22.17 km/h
+.. moyenne    : 16.59 km/h
+.. écart-type : 1.50 km/h
+
+Vent Calvi DX = 500 m
+---------------------
+05h01 TU
+.. limites    : 0.41 km/h -- 9.63 km/h
+.. moyenne    : 5.04 km/h
+.. écart-type : 2.13 km/h
+06h01 TU
+.. limites    : 0.18 km/h -- 6.57 km/h
+.. moyenne    : 3.12 km/h
+.. écart-type : 1.52 km/h
+07h01 TU
+.. limites    : 0.40 km/h -- 13.13 km/h
+.. moyenne    : 5.48 km/h
+.. écart-type : 2.54 km/h
+08h01 TU
+.. limites    : 29.21 km/h -- 47.45 km/h
+.. moyenne    : 39.56 km/h
+.. écart-type : 2.65 km/h
+09h01 TU
+.. limites    : 11.87 km/h -- 24.06 km/h
+.. moyenne    : 18.13 km/h
+.. écart-type : 3.04 km/h
+
+Vent Calvi DX = 1000 m
+----------------------
+05h01 TU
+.. limites    : 1.24 km/h -- 6.05 km/h
+.. moyenne    : 3.21 km/h
+.. écart-type : 1.20 km/h
+06h01 TU
+.. limites    : 1.96 km/h -- 7.24 km/h
+.. moyenne    : 4.76 km/h
+.. écart-type : 1.31 km/h
+07h01 TU
+.. limites    : 8.11 km/h -- 12.70 km/h
+.. moyenne    : 10.66 km/h
+.. écart-type : 1.07 km/h
+08h01 TU
+.. limites    : 19.43 km/h -- 56.51 km/h
+.. moyenne    : 31.43 km/h
+.. écart-type : 2.99 km/h
+09h01 TU
+.. limites    : 8.49 km/h -- 23.60 km/h
+.. moyenne    : 16.59 km/h
+.. écart-type : 3.06 km/h
+
+Pression Calvi DX = 250 m
+-------------------------
+04h01 TU
+.. limites    : 1005.30 hPa -- 1005.40 hPa
+.. moyenne    : 1005.37 hpa
+.. écart-type : 0.02 hpa
+05h01 TU
+.. limites    : 1005.48 hPa -- 1005.65 hPa
+.. moyenne    : 1005.57 hpa
+.. écart-type : 0.04 hpa
+06h01 TU
+.. limites    : 1005.21 hPa -- 1005.31 hPa
+.. moyenne    : 1005.27 hpa
+.. écart-type : 0.02 hpa
+07h01 TU
+.. limites    : 1004.22 hPa -- 1004.41 hPa
+.. moyenne    : 1004.33 hpa
+.. écart-type : 0.05 hpa
+08h01 TU
+.. limites    : 1012.30 hPa -- 1012.64 hPa
+.. moyenne    : 1012.46 hpa
+.. écart-type : 0.10 hpa
+09h01 TU
+.. limites    : 1008.87 hPa -- 1009.06 hPa
+.. moyenne    : 1008.94 hpa
+.. écart-type : 0.05 hpa
+
+Pression Calvi DX = 500 m
+-------------------------
+04h01 TU
+.. limites    : 1005.35 hPa -- 1005.46 hPa
+.. moyenne    : 1005.43 hpa
+.. écart-type : 0.03 hpa
+05h01 TU
+.. limites    : 1005.42 hPa -- 1005.52 hPa
+.. moyenne    : 1005.47 hpa
+.. écart-type : 0.03 hpa
+06h01 TU
+.. limites    : 1005.19 hPa -- 1005.26 hPa
+.. moyenne    : 1005.22 hpa
+.. écart-type : 0.02 hpa
+07h01 TU
+.. limites    : 1004.21 hPa -- 1004.39 hPa
+.. moyenne    : 1004.30 hpa
+.. écart-type : 0.06 hpa
+08h01 TU
+.. limites    : 1012.16 hPa -- 1012.54 hPa
+.. moyenne    : 1012.35 hpa
+.. écart-type : 0.12 hpa
+09h01 TU
+.. limites    : 1008.28 hPa -- 1008.40 hPa
+.. moyenne    : 1008.32 hpa
+.. écart-type : 0.03 hpa
+
+Pression Calvi DX = 1000 m
+--------------------------
+04h01 TU
+.. limites    : 1001.88 hPa -- 1002.03 hPa
+.. moyenne    : 1001.96 hpa
+.. écart-type : 0.07 hpa
+05h01 TU
+.. limites    : 1004.46 hPa -- 1004.57 hPa
+.. moyenne    : 1004.51 hpa
+.. écart-type : 0.04 hpa
+06h01 TU
+.. limites    : 1003.73 hPa -- 1003.78 hPa
+.. moyenne    : 1003.76 hpa
+.. écart-type : 0.02 hpa
+07h01 TU
+.. limites    : 1003.04 hPa -- 1003.09 hPa
+.. moyenne    : 1003.06 hpa
+.. écart-type : 0.02 hpa
+08h01 TU
+.. limites    : 1009.65 hPa -- 1009.80 hPa
+.. moyenne    : 1009.72 hpa
+.. écart-type : 0.06 hpa
+09h01 TU
+.. limites    : 1006.93 hPa -- 1007.01 hPa
+.. moyenne    : 1006.97 hpa
+.. écart-type : 0.03 hpa
+
+Vent Marignana DX = 250 m
+-------------------------
+05h01 TU
+.. limites    : 0.28 km/h -- 25.13 km/h
+.. moyenne    : 12.03 km/h
+.. écart-type : 5.36 km/h
+06h01 TU
+.. limites    : 0.82 km/h -- 44.09 km/h
+.. moyenne    : 20.14 km/h
+.. écart-type : 9.26 km/h
+07h01 TU
+.. limites    : 0.64 km/h -- 42.62 km/h
+.. moyenne    : 20.05 km/h
+.. écart-type : 10.05 km/h
+08h01 TU
+.. limites    : 0.10 km/h -- 33.01 km/h
+.. moyenne    : 13.49 km/h
+.. écart-type : 6.10 km/h
+09h01 TU
+.. limites    : 0.12 km/h -- 22.61 km/h
+.. moyenne    : 3.90 km/h
+.. écart-type : 2.76 km/h
+
+Vent Marignana DX = 500 m
+-------------------------
+05h01 TU
+.. limites    : 3.04 km/h -- 20.95 km/h
+.. moyenne    : 12.86 km/h
+.. écart-type : 4.74 km/h
+06h01 TU
+.. limites    : 8.59 km/h -- 36.56 km/h
+.. moyenne    : 24.40 km/h
+.. écart-type : 6.84 km/h
+07h01 TU
+.. limites    : 9.68 km/h -- 32.98 km/h
+.. moyenne    : 21.75 km/h
+.. écart-type : 6.41 km/h
+08h01 TU
+.. limites    : 2.63 km/h -- 42.01 km/h
+.. moyenne    : 23.78 km/h
+.. écart-type : 5.24 km/h
+09h01 TU
+.. limites    : 3.79 km/h -- 26.06 km/h
+.. moyenne    : 15.17 km/h
+.. écart-type : 6.28 km/h
+
+Vent Marignana DX = 1000 m
+--------------------------
+05h01 TU
+.. limites    : 8.18 km/h -- 13.19 km/h
+.. moyenne    : 10.61 km/h
+.. écart-type : 1.11 km/h
+06h01 TU
+.. limites    : 19.62 km/h -- 26.96 km/h
+.. moyenne    : 22.82 km/h
+.. écart-type : 1.94 km/h
+07h01 TU
+.. limites    : 20.73 km/h -- 26.16 km/h
+.. moyenne    : 23.16 km/h
+.. écart-type : 1.54 km/h
+08h01 TU
+.. limites    : 9.45 km/h -- 21.60 km/h
+.. moyenne    : 14.51 km/h
+.. écart-type : 1.17 km/h
+09h01 TU
+.. limites    : 12.32 km/h -- 20.53 km/h
+.. moyenne    : 16.17 km/h
+.. écart-type : 1.83 km/h
+
+Pression Marignana DX = 250 m
+-----------------------------
+04h01 TU
+.. limites    : 1005.16 hPa -- 1005.61 hPa
+.. moyenne    : 1005.40 hpa
+.. écart-type : 0.15 hpa
+05h01 TU
+.. limites    : 1005.53 hPa -- 1006.14 hPa
+.. moyenne    : 1005.88 hpa
+.. écart-type : 0.15 hpa
+06h01 TU
+.. limites    : 1004.09 hPa -- 1005.29 hPa
+.. moyenne    : 1004.82 hpa
+.. écart-type : 0.31 hpa
+07h01 TU
+.. limites    : 1002.96 hPa -- 1004.16 hPa
+.. moyenne    : 1003.61 hpa
+.. écart-type : 0.30 hpa
+08h01 TU
+.. limites    : 1008.67 hPa -- 1009.35 hPa
+.. moyenne    : 1009.06 hpa
+.. écart-type : 0.17 hpa
+09h01 TU
+.. limites    : 1007.93 hPa -- 1008.68 hPa
+.. moyenne    : 1008.35 hpa
+.. écart-type : 0.15 hpa
+
+Pression Marignana DX = 500 m
+-----------------------------
+04h01 TU
+.. limites    : 1005.32 hPa -- 1005.59 hPa
+.. moyenne    : 1005.47 hpa
+.. écart-type : 0.10 hpa
+05h01 TU
+.. limites    : 1005.54 hPa -- 1006.00 hPa
+.. moyenne    : 1005.75 hpa
+.. écart-type : 0.14 hpa
+06h01 TU
+.. limites    : 1004.30 hPa -- 1005.35 hPa
+.. moyenne    : 1004.83 hpa
+.. écart-type : 0.32 hpa
+07h01 TU
+.. limites    : 1003.14 hPa -- 1003.94 hPa
+.. moyenne    : 1003.49 hpa
+.. écart-type : 0.24 hpa
+08h01 TU
+.. limites    : 1007.35 hPa -- 1008.88 hPa
+.. moyenne    : 1008.19 hpa
+.. écart-type : 0.54 hpa
+09h01 TU
+.. limites    : 1007.35 hPa -- 1008.13 hPa
+.. moyenne    : 1007.67 hpa
+.. écart-type : 0.22 hpa
+
+Pression Marignana DX = 1000 m
+------------------------------
+04h01 TU
+.. limites    : 1001.97 hPa -- 1002.37 hPa
+.. moyenne    : 1002.18 hpa
+.. écart-type : 0.18 hpa
+05h01 TU
+.. limites    : 1004.76 hPa -- 1004.85 hPa
+.. moyenne    : 1004.80 hpa
+.. écart-type : 0.03 hpa
+06h01 TU
+.. limites    : 1003.21 hPa -- 1003.49 hPa
+.. moyenne    : 1003.36 hpa
+.. écart-type : 0.11 hpa
+07h01 TU
+.. limites    : 1002.54 hPa -- 1002.76 hPa
+.. moyenne    : 1002.65 hpa
+.. écart-type : 0.09 hpa
+08h01 TU
+.. limites    : 1009.83 hPa -- 1010.11 hPa
+.. moyenne    : 1009.99 hpa
+.. écart-type : 0.11 hpa
+09h01 TU
+.. limites    : 1006.43 hPa -- 1006.55 hPa
+.. moyenne    : 1006.49 hpa
+.. écart-type : 0.05 hpa
+
+Vent Campo Dell'Oro DX = 250 m
+------------------------------
+05h01 TU
+.. limites    : 0.32 km/h -- 11.43 km/h
+.. moyenne    : 6.02 km/h
+.. écart-type : 2.03 km/h
+06h01 TU
+.. limites    : 0.32 km/h -- 9.19 km/h
+.. moyenne    : 4.55 km/h
+.. écart-type : 2.03 km/h
+07h01 TU
+.. limites    : 0.03 km/h -- 9.71 km/h
+.. moyenne    : 3.74 km/h
+.. écart-type : 1.35 km/h
+08h01 TU
+.. limites    : 0.51 km/h -- 31.76 km/h
+.. moyenne    : 11.12 km/h
+.. écart-type : 3.28 km/h
+09h01 TU
+.. limites    : 11.90 km/h -- 31.55 km/h
+.. moyenne    : 21.43 km/h
+.. écart-type : 3.06 km/h
+
+Vent Campo Dell'Oro DX = 500 m
+------------------------------
+05h01 TU
+.. limites    : 5.16 km/h -- 10.01 km/h
+.. moyenne    : 7.18 km/h
+.. écart-type : 0.97 km/h
+06h01 TU
+.. limites    : 0.50 km/h -- 7.97 km/h
+.. moyenne    : 4.48 km/h
+.. écart-type : 1.55 km/h
+07h01 TU
+.. limites    : 1.16 km/h -- 9.16 km/h
+.. moyenne    : 5.29 km/h
+.. écart-type : 1.27 km/h
+08h01 TU
+.. limites    : 1.60 km/h -- 31.86 km/h
+.. moyenne    : 13.59 km/h
+.. écart-type : 4.02 km/h
+09h01 TU
+.. limites    : 11.14 km/h -- 24.19 km/h
+.. moyenne    : 17.42 km/h
+.. écart-type : 1.94 km/h
+
+Vent Campo Dell'Oro DX = 1000 m
+-------------------------------
+05h01 TU
+.. limites    : 5.61 km/h -- 10.47 km/h
+.. moyenne    : 7.92 km/h
+.. écart-type : 1.07 km/h
+06h01 TU
+.. limites    : 0.93 km/h -- 5.46 km/h
+.. moyenne    : 3.30 km/h
+.. écart-type : 0.86 km/h
+07h01 TU
+.. limites    : 2.99 km/h -- 9.11 km/h
+.. moyenne    : 5.99 km/h
+.. écart-type : 0.92 km/h
+08h01 TU
+.. limites    : 23.47 km/h -- 89.15 km/h
+.. moyenne    : 41.90 km/h
+.. écart-type : 4.26 km/h
+09h01 TU
+.. limites    : 16.66 km/h -- 22.78 km/h
+.. moyenne    : 18.61 km/h
+.. écart-type : 1.45 km/h
+
+Pression Campo Dell'Oro DX = 250 m
+----------------------------------
+04h01 TU
+.. limites    : 1005.84 hPa -- 1005.88 hPa
+.. moyenne    : 1005.86 hpa
+.. écart-type : 0.01 hpa
+05h01 TU
+.. limites    : 1006.56 hPa -- 1006.74 hPa
+.. moyenne    : 1006.65 hpa
+.. écart-type : 0.04 hpa
+06h01 TU
+.. limites    : 1005.99 hPa -- 1006.08 hPa
+.. moyenne    : 1006.04 hpa
+.. écart-type : 0.02 hpa
+07h01 TU
+.. limites    : 1004.68 hPa -- 1004.85 hPa
+.. moyenne    : 1004.76 hpa
+.. écart-type : 0.04 hpa
+08h01 TU
+.. limites    : 1009.54 hPa -- 1009.90 hPa
+.. moyenne    : 1009.70 hpa
+.. écart-type : 0.10 hpa
+09h01 TU
+.. limites    : 1009.21 hPa -- 1009.42 hPa
+.. moyenne    : 1009.31 hpa
+.. écart-type : 0.05 hpa
+
+Pression Campo Dell'Oro DX = 500 m
+----------------------------------
+04h01 TU
+.. limites    : 1005.87 hPa -- 1005.90 hPa
+.. moyenne    : 1005.88 hpa
+.. écart-type : 0.01 hpa
+05h01 TU
+.. limites    : 1006.56 hPa -- 1006.70 hPa
+.. moyenne    : 1006.61 hpa
+.. écart-type : 0.04 hpa
+06h01 TU
+.. limites    : 1005.96 hPa -- 1006.03 hPa
+.. moyenne    : 1005.99 hpa
+.. écart-type : 0.03 hpa
+07h01 TU
+.. limites    : 1004.64 hPa -- 1004.74 hPa
+.. moyenne    : 1004.68 hpa
+.. écart-type : 0.03 hpa
+08h01 TU
+.. limites    : 1009.33 hPa -- 1009.53 hPa
+.. moyenne    : 1009.43 hpa
+.. écart-type : 0.06 hpa
+09h01 TU
+.. limites    : 1008.91 hPa -- 1009.04 hPa
+.. moyenne    : 1008.96 hpa
+.. écart-type : 0.03 hpa
+
+Pression Campo Dell'Oro DX = 1000 m
+-----------------------------------
+04h01 TU
+.. limites    : 1003.05 hPa -- 1003.18 hPa
+.. moyenne    : 1003.11 hpa
+.. écart-type : 0.05 hpa
+05h01 TU
+.. limites    : 1005.17 hPa -- 1005.25 hPa
+.. moyenne    : 1005.21 hpa
+.. écart-type : 0.03 hpa
+06h01 TU
+.. limites    : 1004.48 hPa -- 1004.52 hPa
+.. moyenne    : 1004.50 hpa
+.. écart-type : 0.02 hpa
+07h01 TU
+.. limites    : 1004.14 hPa -- 1004.20 hPa
+.. moyenne    : 1004.18 hpa
+.. écart-type : 0.03 hpa
+08h01 TU
+.. limites    : 1007.66 hPa -- 1007.69 hPa
+.. moyenne    : 1007.68 hpa
+.. écart-type : 0.01 hpa
+09h01 TU
+.. limites    : 1007.56 hPa -- 1007.65 hPa
+.. moyenne    : 1007.60 hpa
+.. écart-type : 0.03 hpa
+
+Vent Cap Pertusato DX = 250 m
+-----------------------------
+05h01 TU
+.. limites    : 11.52 km/h -- 34.07 km/h
+.. moyenne    : 22.58 km/h
+.. écart-type : 5.76 km/h
+06h01 TU
+.. limites    : 0.87 km/h -- 21.62 km/h
+.. moyenne    : 10.44 km/h
+.. écart-type : 4.26 km/h
+07h01 TU
+.. limites    : 5.14 km/h -- 23.70 km/h
+.. moyenne    : 13.44 km/h
+.. écart-type : 2.27 km/h
+08h01 TU
+.. limites    : 1.78 km/h -- 16.77 km/h
+.. moyenne    : 9.79 km/h
+.. écart-type : 2.89 km/h
+09h01 TU
+.. limites    : 18.04 km/h -- 45.92 km/h
+.. moyenne    : 28.86 km/h
+.. écart-type : 5.92 km/h
+
+Vent Cap Pertusato DX = 500 m
+-----------------------------
+05h01 TU
+.. limites    : 9.93 km/h -- 32.04 km/h
+.. moyenne    : 22.18 km/h
+.. écart-type : 4.71 km/h
+06h01 TU
+.. limites    : 4.50 km/h -- 19.65 km/h
+.. moyenne    : 11.88 km/h
+.. écart-type : 3.71 km/h
+07h01 TU
+.. limites    : 8.66 km/h -- 22.06 km/h
+.. moyenne    : 14.15 km/h
+.. écart-type : 2.02 km/h
+08h01 TU
+.. limites    : 4.64 km/h -- 15.45 km/h
+.. moyenne    : 9.42 km/h
+.. écart-type : 1.82 km/h
+09h01 TU
+.. limites    : 20.21 km/h -- 47.70 km/h
+.. moyenne    : 32.63 km/h
+.. écart-type : 6.27 km/h
+
+Vent Cap Pertusato DX = 1000 m
+------------------------------
+05h01 TU
+.. limites    : 13.28 km/h -- 27.37 km/h
+.. moyenne    : 20.72 km/h
+.. écart-type : 4.76 km/h
+06h01 TU
+.. limites    : 4.43 km/h -- 17.88 km/h
+.. moyenne    : 9.25 km/h
+.. écart-type : 3.39 km/h
+07h01 TU
+.. limites    : 5.52 km/h -- 12.60 km/h
+.. moyenne    : 8.50 km/h
+.. écart-type : 1.44 km/h
+08h01 TU
+.. limites    : 0.28 km/h -- 5.35 km/h
+.. moyenne    : 3.29 km/h
+.. écart-type : 1.10 km/h
+09h01 TU
+.. limites    : 13.83 km/h -- 37.79 km/h
+.. moyenne    : 23.42 km/h
+.. écart-type : 5.38 km/h
+
+Pression Cap Pertusato DX = 250 m
+---------------------------------
+04h01 TU
+.. limites    : 1006.90 hPa -- 1007.07 hPa
+.. moyenne    : 1006.98 hpa
+.. écart-type : 0.05 hpa
+05h01 TU
+.. limites    : 1005.90 hPa -- 1006.06 hPa
+.. moyenne    : 1005.96 hpa
+.. écart-type : 0.04 hpa
+06h01 TU
+.. limites    : 1006.47 hPa -- 1006.59 hPa
+.. moyenne    : 1006.52 hpa
+.. écart-type : 0.03 hpa
+07h01 TU
+.. limites    : 1006.32 hPa -- 1006.49 hPa
+.. moyenne    : 1006.39 hpa
+.. écart-type : 0.04 hpa
+08h01 TU
+.. limites    : 1006.62 hPa -- 1006.75 hPa
+.. moyenne    : 1006.69 hpa
+.. écart-type : 0.04 hpa
+09h01 TU
+.. limites    : 1007.92 hPa -- 1008.19 hPa
+.. moyenne    : 1008.08 hpa
+.. écart-type : 0.08 hpa
+
+Pression Cap Pertusato DX = 500 m
+---------------------------------
+04h01 TU
+.. limites    : 1006.88 hPa -- 1007.03 hPa
+.. moyenne    : 1006.95 hpa
+.. écart-type : 0.05 hpa
+05h01 TU
+.. limites    : 1005.90 hPa -- 1006.00 hPa
+.. moyenne    : 1005.95 hpa
+.. écart-type : 0.03 hpa
+06h01 TU
+.. limites    : 1006.43 hPa -- 1006.51 hPa
+.. moyenne    : 1006.46 hpa
+.. écart-type : 0.02 hpa
+07h01 TU
+.. limites    : 1006.18 hPa -- 1006.53 hPa
+.. moyenne    : 1006.33 hpa
+.. écart-type : 0.10 hpa
+08h01 TU
+.. limites    : 1006.35 hPa -- 1006.68 hPa
+.. moyenne    : 1006.51 hpa
+.. écart-type : 0.08 hpa
+09h01 TU
+.. limites    : 1007.85 hPa -- 1008.15 hPa
+.. moyenne    : 1007.99 hpa
+.. écart-type : 0.09 hpa
+
+Pression Cap Pertusato DX = 1000 m
+----------------------------------
+04h01 TU
+.. limites    : 1005.55 hPa -- 1005.74 hPa
+.. moyenne    : 1005.64 hpa
+.. écart-type : 0.07 hpa
+05h01 TU
+.. limites    : 1004.57 hPa -- 1004.62 hPa
+.. moyenne    : 1004.60 hpa
+.. écart-type : 0.02 hpa
+06h01 TU
+.. limites    : 1005.24 hPa -- 1005.29 hPa
+.. moyenne    : 1005.27 hpa
+.. écart-type : 0.02 hpa
+07h01 TU
+.. limites    : 1005.01 hPa -- 1005.12 hPa
+.. moyenne    : 1005.07 hpa
+.. écart-type : 0.05 hpa
+08h01 TU
+.. limites    : 1005.30 hPa -- 1005.52 hPa
+.. moyenne    : 1005.42 hpa
+.. écart-type : 0.08 hpa
+09h01 TU
+.. limites    : 1006.32 hPa -- 1006.51 hPa
+.. moyenne    : 1006.44 hpa
+.. écart-type : 0.07 hpa
+
+Vent Porto-Vecchio DX = 250 m
+-----------------------------
+05h01 TU
+.. limites    : 1.27 km/h -- 26.35 km/h
+.. moyenne    : 11.76 km/h
+.. écart-type : 3.79 km/h
+06h01 TU
+.. limites    : 16.47 km/h -- 28.24 km/h
+.. moyenne    : 23.62 km/h
+.. écart-type : 2.28 km/h
+07h01 TU
+.. limites    : 5.12 km/h -- 27.33 km/h
+.. moyenne    : 18.09 km/h
+.. écart-type : 1.74 km/h
+08h01 TU
+.. limites    : 2.37 km/h -- 10.90 km/h
+.. moyenne    : 6.34 km/h
+.. écart-type : 1.09 km/h
+09h01 TU
+.. limites    : 7.41 km/h -- 14.56 km/h
+.. moyenne    : 10.61 km/h
+.. écart-type : 1.24 km/h
+
+Vent Porto-Vecchio DX = 500 m
+-----------------------------
+05h01 TU
+.. limites    : 0.87 km/h -- 20.60 km/h
+.. moyenne    : 9.49 km/h
+.. écart-type : 3.68 km/h
+06h01 TU
+.. limites    : 13.34 km/h -- 29.59 km/h
+.. moyenne    : 22.17 km/h
+.. écart-type : 4.00 km/h
+07h01 TU
+.. limites    : 5.91 km/h -- 28.82 km/h
+.. moyenne    : 18.49 km/h
+.. écart-type : 2.95 km/h
+08h01 TU
+.. limites    : 1.26 km/h -- 11.08 km/h
+.. moyenne    : 5.85 km/h
+.. écart-type : 1.42 km/h
+09h01 TU
+.. limites    : 6.84 km/h -- 12.33 km/h
+.. moyenne    : 9.88 km/h
+.. écart-type : 1.05 km/h
+
+Vent Porto-Vecchio DX = 1000 m
+------------------------------
+05h01 TU
+.. limites    : 6.31 km/h -- 17.48 km/h
+.. moyenne    : 12.39 km/h
+.. écart-type : 2.60 km/h
+06h01 TU
+.. limites    : 11.96 km/h -- 21.19 km/h
+.. moyenne    : 16.82 km/h
+.. écart-type : 2.52 km/h
+07h01 TU
+.. limites    : 14.99 km/h -- 24.60 km/h
+.. moyenne    : 19.67 km/h
+.. écart-type : 1.56 km/h
+08h01 TU
+.. limites    : 2.00 km/h -- 7.50 km/h
+.. moyenne    : 5.38 km/h
+.. écart-type : 1.18 km/h
+09h01 TU
+.. limites    : 10.23 km/h -- 15.18 km/h
+.. moyenne    : 12.26 km/h
+.. écart-type : 1.06 km/h
+
+Pression Porto-Vecchio DX = 250 m
+---------------------------------
+04h01 TU
+.. limites    : 1006.87 hPa -- 1007.02 hPa
+.. moyenne    : 1006.94 hpa
+.. écart-type : 0.04 hpa
+05h01 TU
+.. limites    : 1006.71 hPa -- 1007.00 hPa
+.. moyenne    : 1006.89 hpa
+.. écart-type : 0.07 hpa
+06h01 TU
+.. limites    : 1006.85 hPa -- 1007.00 hPa
+.. moyenne    : 1006.90 hpa
+.. écart-type : 0.04 hpa
+07h01 TU
+.. limites    : 1006.75 hPa -- 1006.94 hPa
+.. moyenne    : 1006.81 hpa
+.. écart-type : 0.05 hpa
+08h01 TU
+.. limites    : 1006.35 hPa -- 1006.62 hPa
+.. moyenne    : 1006.46 hpa
+.. écart-type : 0.07 hpa
+09h01 TU
+.. limites    : 1007.25 hPa -- 1007.38 hPa
+.. moyenne    : 1007.34 hpa
+.. écart-type : 0.03 hpa
+
+Pression Porto-Vecchio DX = 500 m
+---------------------------------
+04h01 TU
+.. limites    : 1006.91 hPa -- 1007.02 hPa
+.. moyenne    : 1006.95 hpa
+.. écart-type : 0.04 hpa
+05h01 TU
+.. limites    : 1006.58 hPa -- 1006.75 hPa
+.. moyenne    : 1006.69 hpa
+.. écart-type : 0.04 hpa
+06h01 TU
+.. limites    : 1006.85 hPa -- 1007.20 hPa
+.. moyenne    : 1006.99 hpa
+.. écart-type : 0.11 hpa
+07h01 TU
+.. limites    : 1006.75 hPa -- 1006.98 hPa
+.. moyenne    : 1006.86 hpa
+.. écart-type : 0.07 hpa
+08h01 TU
+.. limites    : 1006.34 hPa -- 1006.48 hPa
+.. moyenne    : 1006.39 hpa
+.. écart-type : 0.05 hpa
+09h01 TU
+.. limites    : 1007.44 hPa -- 1007.60 hPa
+.. moyenne    : 1007.51 hpa
+.. écart-type : 0.05 hpa
+
+Pression Porto-Vecchio DX = 1000 m
+----------------------------------
+04h01 TU
+.. limites    : 1005.22 hPa -- 1005.46 hPa
+.. moyenne    : 1005.34 hpa
+.. écart-type : 0.08 hpa
+05h01 TU
+.. limites    : 1005.39 hPa -- 1005.44 hPa
+.. moyenne    : 1005.41 hpa
+.. écart-type : 0.02 hpa
+06h01 TU
+.. limites    : 1005.11 hPa -- 1005.15 hPa
+.. moyenne    : 1005.13 hpa
+.. écart-type : 0.01 hpa
+07h01 TU
+.. limites    : 1004.80 hPa -- 1004.83 hPa
+.. moyenne    : 1004.82 hpa
+.. écart-type : 0.01 hpa
+08h01 TU
+.. limites    : 1005.34 hPa -- 1005.47 hPa
+.. moyenne    : 1005.41 hpa
+.. écart-type : 0.05 hpa
+09h01 TU
+.. limites    : 1005.53 hPa -- 1005.65 hPa
+.. moyenne    : 1005.59 hpa
+.. écart-type : 0.06 hpa
+
