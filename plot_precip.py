@@ -10,14 +10,14 @@ from matplotlib.colors import LinearSegmentedColormap
 from plots import Map
 from readers import MesoNH, get_mesonh
 
-plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
+plt.rcParams.update({"text.usetex": False, "font.family": "serif", "font.size": 15})
 
 cmap = LinearSegmentedColormap.from_list(
     "cmap1", ["white", "blue", "cyan", "green", "yellow", "orange", "red", "purple", "black"]
 )
 
 
-def plot_precip(mesonh: MesoNH, precip_map: Map, *, resol_dx: int):
+def plot_precip_inprr(mesonh: MesoNH, precip_map: Map, *, resol_dx: int):
     """
     Plot the accumulated precipitations hour by hour from Meso-NH silulation data and export figs
     in PNG format.
@@ -55,17 +55,50 @@ def plot_precip(mesonh: MesoNH, precip_map: Map, *, resol_dx: int):
         )
 
         plt.savefig(f"inprr_{date}_{resol_dx}m.png")
+        
+
+
+def plot_precip_acprr(mesonh: MesoNH, precip_map : Map, resol_dx : int):
+    for hour in range (60, 360, 60):
+        mesonh.get_data(hour - 60)
+        acprr_60 = mesonh.get_var("ACPRR")
+        mesonh.get_data(hour)
+        acprr_0 = mesonh.get_var("ACPRR")
+        
+        acprr_hourly = acprr_0 - acprr_60
+        
+        
+        date = datetime.strptime("2022-08-18 00:00:00", "%Y-%m-%d %H:%M:%S") + timedelta(
+            seconds=float(mesonh.data.variables["time"][0])
+        )
+       
+        axes = precip_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
+        contourf = precip_map.plot_contourf(
+            acprr_hourly * 1000, cmap=cmap, levels=np.linspace(0, 160, 100)
+        )
+        cbar = plt.colorbar(contourf, label="Précipitations accumulées (mm/h)")
+        cbar.set_ticks(np.linspace(0, 160, 8))
+        axes.set_title(
+            f"Simulation Méso-NH du {date} TU (DX = {resol_dx} m)\n"
+            "Précipitation accumulées sur l'heure"
+        )
+        
+        date = str(date).replace(":", "_")
+        plt.savefig(f"acprr_hourly_{date}_{resol_dx}m.png")
+
 
 
 if __name__ == "__main__":
     reader = get_mesonh(250)
     my_map = Map(reader.longitude, reader.latitude)
-    plot_precip(reader, my_map, resol_dx=250)
+    plot_precip_acprr(reader, my_map, resol_dx=250)
 
     reader = get_mesonh(500)
     my_map = Map(reader.longitude, reader.latitude)
-    plot_precip(reader, my_map, resol_dx=500)
+    plot_precip_acprr(reader, my_map, resol_dx=500)
 
     reader = get_mesonh(1000)
     my_map = Map(reader.longitude, reader.latitude)
-    plot_precip(reader, my_map, resol_dx=1000)
+    plot_precip_acprr(reader, my_map, resol_dx=1000)
+    
+
