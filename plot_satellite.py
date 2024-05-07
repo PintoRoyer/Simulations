@@ -9,7 +9,7 @@ from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
 
 from plots import Map
 from readers import Satellite, get_mesonh
-from plot_station import get_all_stations, all_stations_on_axes
+from plot_station import all_stations_on_axes
 
 
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
