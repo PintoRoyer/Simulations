@@ -512,3 +512,23 @@ def lonlat_to_index(reader, lon: float, lat: float):
     """
     j, i =  get_index_from_vect(reader.longitude, reader.latitude, (lon, lat))
     return i, j
+
+
+def get_time_index(hour: int, minute: int):
+    """
+    Compute the index of the Meso-NH file from hour and minute.
+
+    Parameters
+    ----------
+    hour : int
+        The hours.
+    minute : int
+        The minutes.
+
+    Returns
+    -------
+    out : int
+        The index of the file corresponding to the given timestamp.
+    """
+    return (hour - 4) * 60 + (minute - 1)
+

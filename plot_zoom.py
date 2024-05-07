@@ -8,7 +8,7 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 
 from plots import Map
-from readers import MesoNH, get_mesonh, index_to_lonlat, lonlat_to_index
+from readers import MesoNH, get_mesonh, index_to_lonlat, lonlat_to_inde, get_time_index
 
 plt.rcParams.update({"text.usetex": False, "font.size": 15})
 
@@ -21,25 +21,6 @@ def sum_clouds(thcw, thrw, thic, thsn, thgr):
 def norm_wind(um10, vm10, wind10):
     """Normalize the wind components."""
     return um10 / wind10, vm10 / wind10
-
-
-def get_time_index(hour: int, minute: int):
-    """
-    Compute the index of the Meso-NH file from hour and minute.
-
-    Parameters
-    ----------
-    hour : int
-        The hours.
-    minute : int
-        The minutes.
-
-    Returns
-    -------
-    out : int
-        The index of the file corresponding to the given timestamp.
-    """
-    return (hour - 4) * 60 + (minute - 1)
 
 
 def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: int, ):
