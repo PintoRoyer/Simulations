@@ -7,14 +7,25 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 import json
+import cartopy.feature as cfeature
 
 from plots import Map
-from readers import MesoNH, get_mesonh
+from readers import MesoNH, get_mesonh, get_time_index
 
-plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
+plt.rcParams.update({"text.usetex": False, "font.family": "serif", "font.size": 15})
 
-cmap = LinearSegmentedColormap.from_list("cmap2", ["black", "white", "blue", "red"])
+# cmap = LinearSegmentedColormap.from_list("cmap2", ["black", "white", "blue", "red"])
 
+cmap = LinearSegmentedColormap.from_list("cmap2", [
+    (0, (1, 1, 1, 0)),
+    (0.06, (1, 1, 1, 0.2)),
+    (0.12, (1, 1, 1, 0.4)),
+    (0.18, (1, 1, 1, 0.6)),
+    (0.24, (1, 1, 1, 0.8)),
+    (0.3, (1, 1, 1, 1)),
+    (0.35, "blue"),
+    (1, "red")
+])
 
 def sum_clouds(thcw, thrw, thic, thsn, thgr):
     """Add up different thickness of the condensed states of water."""
@@ -60,19 +71,56 @@ def plot_clouds(mesonh: MesoNH, clouds_map: Map, *, resol_dx: int):
             f"Simulation Méso-NH du {date} TU (DX = {resol_dx} m)\n"
             "Couverture nuageuse"
         )
-
+        
+        date = str(date).replace(":", "_")
         plt.savefig(f"clouds_{date}_{resol_dx}m.png")
 
 
+def plot_all_clouds(mesonh : MesoNH, clouds_map : Map, time_index, resol_dx : int):
+    with open("limits/lim_250m.json", "r", encoding="utf-8") as file:
+        lim = json.loads(file.read())
+    levels = np.linspace(lim["clouds"][0], lim["clouds"][1], 100)
+    plt.close("all")
+    
+    axes = clouds_map.init_axes(
+        fig_kw={"figsize": (8, 5), "layout": "compressed"},
+        feature_kw={"linewidth": 1, "color": "white", "alpha": 0.5})[1]
+    axes.add_feature(cfeature.OCEAN, color="black")
+    axes.add_feature(cfeature.LAND, color="black")
+    
+    for time in time_index :
+        mesonh.get_data(time)
+        clouds = mesonh.get_var("THCW", "THRW", "THIC", "THSN", "THGR", func=sum_clouds)
+
+        contourf = clouds_map.plot_contourf(
+            np.where(clouds>30, clouds, 0), cmap=cmap, levels=levels
+        )
+        
+    cbar = plt.colorbar(contourf, label="Épaisseur nuageuse (mm)")
+    cbar.set_ticks(np.linspace(lim["clouds"][0], lim["clouds"][1], 8))
+    axes.set_title(
+        f"Simulation Méso-NH - (DX = {resol_dx} m)\n"
+        "Couverture nuageuse"
+    )
+    
+    plt.savefig(f"clouds_{resol_dx}m.png")
+
+
+
 if __name__ == "__main__":
+    time_index = []
+    time = ((5, 0), (6, 30), (7, 15), (8, 15), (8, 45))
+    for hour, minute in time:
+        time_index.append(get_time_index(hour, minute))
+    
     reader = get_mesonh(250)
     my_map = Map(reader.longitude, reader.latitude)
-    plot_clouds(reader, my_map, resol_dx=250)
+    plot_all_clouds(reader, my_map, time_index, resol_dx=250)
 
-    reader = get_mesonh(500)
-    my_map = Map(reader.longitude, reader.latitude)
-    plot_clouds(reader, my_map, resol_dx=500)
+    # reader = get_mesonh(500)
+    # my_map = Map(reader.longitude, reader.latitude)
+    # plot_clouds(reader, my_map, resol_dx=500)
 
-    reader = get_mesonh(1000)
-    my_map = Map(reader.longitude, reader.latitude)
-    plot_clouds(reader, my_map, resol_dx=1000)
+    # reader = get_mesonh(1000)
+    # my_map = Map(reader.longitude, reader.latitude)
+    # plot_clouds(reader, my_map, resol_dx=1000)
