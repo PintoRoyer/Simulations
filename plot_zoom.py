@@ -9,6 +9,7 @@ from matplotlib.colors import LinearSegmentedColormap
 
 from plots import Map
 from readers import MesoNH, get_mesonh, index_to_lonlat, lonlat_to_inde, get_time_index
+from plot_station import all_stations_on_axes
 
 plt.rcParams.update({"text.usetex": False, "font.size": 15})
 
@@ -23,7 +24,7 @@ def norm_wind(um10, vm10, wind10):
     return um10 / wind10, vm10 / wind10
 
 
-def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: int, ):
+def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: int):
     """
     Plot zoomed-in maps for clouds, pressure and wind at a given resolution.
 
