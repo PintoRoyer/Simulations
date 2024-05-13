@@ -11,6 +11,18 @@ from plots import Map
 from readers import MesoNH, get_mesonh
 from plot_station import all_stations_on_axes
 
+
+LON_OFFSET = {
+    250:  1.151457,
+    500:  1.186018,
+    1000: 1.106474
+}
+LAT_OFFSET = {
+    250:  0.433702,
+    500:  0.448599,
+    1000: 0.31105
+}
+
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 
 cmap = LinearSegmentedColormap.from_list(
@@ -99,7 +111,7 @@ def plot_precip_acprr(mesonh: MesoNH, precip_map : Map, resol_dx : int):
 
 if __name__ == "__main__":
     reader = get_mesonh(250)
-    my_map = Map(reader.longitude, reader.latitude)
+    my_map = Map(reader.longitude + LON_OFFSET[250], reader.latitude + LAT_OFFSET[250])
     plot_precip_inprr(reader, my_map, resol_dx=250, stations=True)
 
     # reader = get_mesonh(500)

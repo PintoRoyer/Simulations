@@ -13,8 +13,16 @@ import pandas as pd
 from readers import MesoNH, get_mesonh, lonlat_to_index
 
 
-LON_OFFSET = 1.042746
-LAT_OFFSET = 0.409293
+LON_OFFSET = {
+    250:  1.151457,
+    500:  1.186018,
+    1000: 1.106474
+}
+LAT_OFFSET = {
+    250:  0.433702,
+    500:  0.448599,
+    1000: 0.31105
+}
 
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 
@@ -249,7 +257,7 @@ def plot_wind(name: str):
 
     axes = plt.subplots(figsize=(8, 5), layout="compressed")[1]
 
-    for resol_dx in (250, ):
+    for resol_dx in (1000, ):
         taïtôl = f"Vent {name.title()} DX = {resol_dx} m"
         print(f"{taïtôl}\n" + len(taïtôl) * "-")
 
@@ -262,7 +270,7 @@ def plot_wind(name: str):
             label=f"Simulation\nDX = {resol_dx} m"
         )
 
-        mean, std = get_wind10(lon - LON_OFFSET, lat - LAT_OFFSET, resol_dx)
+        mean, std = get_wind10(lon - LON_OFFSET[resol_dx], lat - LAT_OFFSET[resol_dx], resol_dx)
         axes.errorbar(
             np.arange(5, 10.1, 0.1),
             mean,
@@ -280,7 +288,7 @@ def plot_wind(name: str):
     axes.grid("on")
 
     plt.legend()
-    plt.savefig(f"{name}_wind.png")
+    plt.savefig(f"{name}_wind_{resol_dx}m.png")
 
 
 def plot_pressure(name: str):
@@ -308,7 +316,7 @@ def plot_pressure(name: str):
 
     axes = plt.subplots(figsize=(8, 5), layout="compressed")[1]
 
-    for resol_dx in (250, ):
+    for resol_dx in (1000, ):
         taïtôl = f"Pression {name.title()} DX = {resol_dx} m"
         print(f"{taïtôl}\n" + len(taïtôl) * "-")
 
@@ -321,7 +329,7 @@ def plot_pressure(name: str):
             label=f"Simulation\nDX = {resol_dx} m"
         )
 
-        mean, std = get_pressure(lon - LON_OFFSET, lat - LAT_OFFSET, resol_dx)
+        mean, std = get_pressure(lon - LON_OFFSET[resol_dx], lat - LAT_OFFSET[resol_dx], resol_dx)
         axes.errorbar(
             np.arange(4, 10, 0.1),
             mean,
@@ -339,7 +347,7 @@ def plot_pressure(name: str):
     axes.grid("on")
 
     plt.legend()
-    plt.savefig(f"{name}_pressure.png")
+    plt.savefig(f"{name}_pressure_{resol_dx}m.png")
 
 
 if __name__ == "__main__":
