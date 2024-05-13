@@ -9,15 +9,16 @@ from matplotlib.colors import LinearSegmentedColormap
 
 from plots import Map
 from readers import MesoNH, get_mesonh
+from plot_station import all_stations_on_axes
 
-plt.rcParams.update({"text.usetex": False, "font.family": "serif", "font.size": 15})
+plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 
 cmap = LinearSegmentedColormap.from_list(
     "cmap1", ["white", "blue", "cyan", "green", "yellow", "orange", "red", "purple", "black"]
 )
 
 
-def plot_precip_inprr(mesonh: MesoNH, precip_map: Map, *, resol_dx: int):
+def plot_precip_inprr(mesonh: MesoNH, precip_map: Map, *, resol_dx: int, stations: bool = False):
     """
     Plot the accumulated precipitations hour by hour from Meso-NH silulation data and export figs
     in PNG format.
@@ -30,8 +31,12 @@ def plot_precip_inprr(mesonh: MesoNH, precip_map: Map, *, resol_dx: int):
         The Map instance to draw on.
     resol_dx : int, keyword-only
         The spatial resolution of the given simulation.
+    stations : bool, keyword-only, optionnal
+        By default it's set on ``False``. If set on ``True``, the positions of the stations will be
+        display on the map.
     """
-    for hour in range(1, 361, 60):
+    # for hour in range(1, 361, 60):
+    for hour in (121, ):
         inprr = np.zeros(mesonh.longitude.shape)
         for time_index in range(hour, hour + 59):
             mesonh.get_data(time_index)
@@ -43,6 +48,10 @@ def plot_precip_inprr(mesonh: MesoNH, precip_map: Map, *, resol_dx: int):
         )
 
         axes = precip_map.init_axes(fig_kw={"figsize": (8, 5), "layout": "compressed"})[1]
+
+        if stations:
+            all_stations_on_axes(axes)
+
         # inprr * 1000 : from m to mm
         contourf = precip_map.plot_contourf(
             inprr * 1000, cmap=cmap, levels=np.linspace(0, 160, 100)
@@ -54,8 +63,8 @@ def plot_precip_inprr(mesonh: MesoNH, precip_map: Map, *, resol_dx: int):
             "Précipitation accumulées sur l'heure"
         )
 
-        plt.savefig(f"inprr_{date}_{resol_dx}m.png")
-        
+        plt.show()
+        # plt.savefig(f"inprr_{date}_{resol_dx}m.png")
 
 
 def plot_precip_acprr(mesonh: MesoNH, precip_map : Map, resol_dx : int):
@@ -91,14 +100,12 @@ def plot_precip_acprr(mesonh: MesoNH, precip_map : Map, resol_dx : int):
 if __name__ == "__main__":
     reader = get_mesonh(250)
     my_map = Map(reader.longitude, reader.latitude)
-    plot_precip_acprr(reader, my_map, resol_dx=250)
+    plot_precip_inprr(reader, my_map, resol_dx=250, stations=True)
 
-    reader = get_mesonh(500)
-    my_map = Map(reader.longitude, reader.latitude)
-    plot_precip_acprr(reader, my_map, resol_dx=500)
+    # reader = get_mesonh(500)
+    # my_map = Map(reader.longitude, reader.latitude)
+    # plot_precip_acprr(reader, my_map, resol_dx=500)
 
-    reader = get_mesonh(1000)
-    my_map = Map(reader.longitude, reader.latitude)
-    plot_precip_acprr(reader, my_map, resol_dx=1000)
-    
-
+    # reader = get_mesonh(1000)
+    # my_map = Map(reader.longitude, reader.latitude)
+    # plot_precip_acprr(reader, my_map, resol_dx=1000)

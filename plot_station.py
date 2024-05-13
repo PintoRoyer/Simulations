@@ -13,6 +13,9 @@ import pandas as pd
 from readers import MesoNH, get_mesonh, lonlat_to_index
 
 
+LON_OFFSET = 1.042746
+LAT_OFFSET = 0.409293
+
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 
 
@@ -246,9 +249,10 @@ def plot_wind(name: str):
 
     axes = plt.subplots(figsize=(8, 5), layout="compressed")[1]
 
-    for resol_dx in (250, 500, 1000):
+    for resol_dx in (250, ):
         taïtôl = f"Vent {name.title()} DX = {resol_dx} m"
         print(f"{taïtôl}\n" + len(taïtôl) * "-")
+
         mean, std = get_wind10(lon, lat, resol_dx)
         axes.errorbar(
             np.arange(5, 10.1, 0.1),
@@ -256,6 +260,15 @@ def plot_wind(name: str):
             yerr=std,
             fmt="o",
             label=f"Simulation\nDX = {resol_dx} m"
+        )
+
+        mean, std = get_wind10(lon - LON_OFFSET, lat - LAT_OFFSET, resol_dx)
+        axes.errorbar(
+            np.arange(5, 10.1, 0.1),
+            mean,
+            yerr=std,
+            fmt="o",
+            label=f"Simulation décalée\nDX = {resol_dx} m"
         )
 
     data = pd.read_csv(f"../Donnees/stations/{name}.csv", delimiter=";")
@@ -295,17 +308,26 @@ def plot_pressure(name: str):
 
     axes = plt.subplots(figsize=(8, 5), layout="compressed")[1]
 
-    for resol_dx in (250, 500, 1000):
+    for resol_dx in (250, ):
         taïtôl = f"Pression {name.title()} DX = {resol_dx} m"
         print(f"{taïtôl}\n" + len(taïtôl) * "-")
+
         mean, std = get_pressure(lon, lat, resol_dx)
-        print("DEBUG", len(mean), len(np.arange(4, 10, 0.1)))
         axes.errorbar(
             np.arange(4, 10, 0.1),
             mean,
             yerr=std,
             fmt="o",
             label=f"Simulation\nDX = {resol_dx} m"
+        )
+
+        mean, std = get_pressure(lon - LON_OFFSET, lat - LAT_OFFSET, resol_dx)
+        axes.errorbar(
+            np.arange(4, 10, 0.1),
+            mean,
+            yerr=std,
+            fmt="o",
+            label=f"Simulation décalée\nDX = {resol_dx} m"
         )
 
     data = pd.read_csv(f"../Donnees/stations/{name}.csv", delimiter=";")
