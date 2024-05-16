@@ -12,7 +12,7 @@ import cartopy.feature as cfeature
 from plots import Map
 from readers import MesoNH, get_mesonh, get_time_index
 
-plt.rcParams.update({"text.usetex": False, "font.family": "serif", "font.size": 15})
+plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 
 # cmap = LinearSegmentedColormap.from_list("cmap2", ["black", "white", "blue", "red"])
 
@@ -111,14 +111,14 @@ if __name__ == "__main__":
     for hour, minute in time:
         time_index.append(get_time_index(hour, minute))
     
-    # reader = get_mesonh(250)
-    # my_map = Map(reader.longitude, reader.latitude)
-    # plot_all_clouds(reader, my_map, time_index, resol_dx=250)
+    reader = get_mesonh(250)
+    my_map = Map(reader.longitude, reader.latitude)
+    plot_all_clouds(reader, my_map, time_index, resol_dx=250)
 
     # reader = get_mesonh(500)
     # my_map = Map(reader.longitude, reader.latitude)
     # plot_all_clouds(reader, my_map, time_index, resol_dx=500)
 
-    reader = get_mesonh(1000)
-    my_map = Map(reader.longitude, reader.latitude)
-    plot_all_clouds(reader, my_map, time_index, resol_dx=1000)
+    # reader = get_mesonh(1000)
+    # my_map = Map(reader.longitude, reader.latitude)
+    # plot_all_clouds(reader, my_map, time_index, resol_dx=1000)

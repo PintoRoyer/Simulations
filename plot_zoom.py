@@ -6,12 +6,14 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
+import cartopy.crs as ccrs
 
 from plots import Map
-from readers import MesoNH, get_mesonh, index_to_lonlat, lonlat_to_inde, get_time_index
+from readers import MesoNH, get_mesonh, index_to_lonlat, lonlat_to_index, get_time_index
 from plot_station import all_stations_on_axes
 
-plt.rcParams.update({"text.usetex": False, "font.size": 15})
+
+plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 15})
 
 
 def sum_clouds(thcw, thrw, thic, thsn, thgr):
@@ -144,7 +146,6 @@ def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: i
             "scale_units": "xy",
             "units": "xy"
         }
-        
 
     wind_u, wind_v = mesonh.get_var("UM10", "VM10", "WIND10", func=norm_wind)
     my_map.plot_quiver(
@@ -153,6 +154,51 @@ def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: i
         **kwargs
     )
     plt.savefig(f"wind_{time}_{zoom}_{resol_dx}m.png")
+
+
+def plot_zoom_on_axes(lon, lat, time):
+    plt.close("all")
+
+    # Creating Map instance
+    mesonh = get_mesonh(250)
+    my_map = Map(mesonh.longitude, mesonh.latitude)
+
+
+    zoom = (
+        f"{round(float(lat[0]), 1)}-{round(float(lat[1]), 1)}N"
+        f"_{round(float(lon[0]), 1)}-{round(float(lon[1]), 1)}E"
+    )
+
+    # Limits for colorbars
+    with open("limits/lim_250m.json", "r", encoding="utf-8") as file:
+        lim = json.loads(file.read())
+
+
+    # Wind speed
+    fig, axes = plt.subplots(1, 3, figsize=(24, 5), layout="compressed", subplot_kw={"projection": ccrs.PlateCarree()})
+    
+    for index, resol_dx in enumerate((250, 500, 1000)):
+        geoaxes = my_map.init_axes(axes[index], feature_kw={"color": "black"})[1]
+        geoaxes.set_extent([lon[0], lon[1], lat[0], lat[1]])
+        geoaxes.set_title(f"DX = {resol_dx} m")
+
+        mesonh = get_mesonh(resol_dx)
+        mesonh.get_data(get_time_index(7, 00))
+        my_map.longitude = mesonh.longitude
+        my_map.latitude = mesonh.latitude
+
+        var = mesonh.get_var("THCW", "THRW", "THIC", "THSN", "THGR", func=sum_clouds)
+        contourf = my_map.plot_contourf(
+            var,
+            cmap=LinearSegmentedColormap.from_list("cmap2", ["black", "white", "blue", "red"]),
+            levels=np.linspace(lim["clouds"][0], lim["clouds"][1], 100),
+        )
+    
+    cbar = plt.colorbar(contourf, label="Épaisseur nuageuse (mm)")
+    cbar.set_ticks(np.linspace(lim["clouds"][0], lim["clouds"][1], 8))
+            
+    plt.show()
+    # plt.savefig(f"wind_{time}_{zoom}.png")
 
 
 def latex_code(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: int):
@@ -270,7 +316,29 @@ if __name__ == "__main__":
         ((0, -1), (0, -1), 8, 45),
     )
 
-    run_all(500, dx500_zoom, plot=True)
+    zooms = (dx250_zoom, dx500_zoom, dx1000_zoom)
+    lon_min = []
+    lon_max = []
+    lat_min = []
+    lat_max = []
+
+    for index, value in enumerate((250, 500, 1000)):
+        mesonh = get_mesonh(value)
+        i_lim, j_lim = zooms[index][2][: -2]
+        
+        tmp = index_to_lonlat(mesonh, i_lim[0], j_lim[0])
+        lon_min.append(tmp[0])
+        lat_min.append(tmp[1])
+
+        tmp = index_to_lonlat(mesonh, i_lim[1], j_lim[1])
+        lon_max.append(tmp[0])
+        lat_max.append(tmp[1])
+
+    lon = [min(lon_min), max(lon_max)]
+    lat = [min(lat_min), max(lat_max)]
+    print(lon, lat)
+    plot_zoom_on_axes(lon, lat, "07h00")
+        
 
     # mesonh250 = get_mesonh(250)
     # mesonh500 = get_mesonh(500)
