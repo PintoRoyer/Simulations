@@ -156,8 +156,9 @@ def plot_zoom(mesonh: MesoNH, i_lim: tuple, j_lim: tuple, time: str, resol_dx: i
     plt.savefig(f"wind_{time}_{zoom}_{resol_dx}m.png")
 
 
-def plot_zoom_on_axes(lon, lat, time):
+def plot_zoom_on_axes(lon, lat, hour, minute):
     plt.close("all")
+    time = f"{str(hour).zfill(2)}h{str(minute).zfill(2)}"
 
     # Creating Map instance
     mesonh = get_mesonh(250)
@@ -174,16 +175,19 @@ def plot_zoom_on_axes(lon, lat, time):
         lim = json.loads(file.read())
 
 
-    # Wind speed
+    # clouds
     fig, axes = plt.subplots(1, 3, figsize=(24, 5), layout="compressed", subplot_kw={"projection": ccrs.PlateCarree()})
     
     for index, resol_dx in enumerate((250, 500, 1000)):
-        geoaxes = my_map.init_axes(axes[index], feature_kw={"color": "black"})[1]
+        geoaxes = my_map.init_axes(
+            axes[index],
+            feature_kw={"linewidth": 1, "alpha": 0.5, "color": "white"}
+        )[1]
         geoaxes.set_extent([lon[0], lon[1], lat[0], lat[1]])
         geoaxes.set_title(f"DX = {resol_dx} m")
 
         mesonh = get_mesonh(resol_dx)
-        mesonh.get_data(get_time_index(7, 00))
+        mesonh.get_data(get_time_index(hour, minute))
         my_map.longitude = mesonh.longitude
         my_map.latitude = mesonh.latitude
 
@@ -316,6 +320,8 @@ if __name__ == "__main__":
         ((0, -1), (0, -1), 8, 45),
     )
 
+    time_index = 2
+
     zooms = (dx250_zoom, dx500_zoom, dx1000_zoom)
     lon_min = []
     lon_max = []
@@ -324,7 +330,7 @@ if __name__ == "__main__":
 
     for index, value in enumerate((250, 500, 1000)):
         mesonh = get_mesonh(value)
-        i_lim, j_lim = zooms[index][2][: -2]
+        i_lim, j_lim, hour, minute = zooms[index][time_index]
         
         tmp = index_to_lonlat(mesonh, i_lim[0], j_lim[0])
         lon_min.append(tmp[0])
@@ -337,7 +343,7 @@ if __name__ == "__main__":
     lon = [min(lon_min), max(lon_max)]
     lat = [min(lat_min), max(lat_max)]
     print(lon, lat)
-    plot_zoom_on_axes(lon, lat, "07h00")
+    plot_zoom_on_axes(lon, lat, hour, minute)
         
 
     # mesonh250 = get_mesonh(250)
