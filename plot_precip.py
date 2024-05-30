@@ -9,7 +9,7 @@ from matplotlib.colors import LinearSegmentedColormap
 
 from plots import Map
 from readers import MesoNH, get_mesonh
-from plot_station import all_stations_on_axes
+from plot_station import all_stations_on_axes, station_on_axes
 
 
 LON_OFFSET = {
@@ -64,6 +64,8 @@ def plot_precip_inprr(mesonh: MesoNH, precip_map: Map, *, resol_dx: int, station
         if stations:
             all_stations_on_axes(axes)
 
+        station_on_axes(axes, 8.65528, 42.18889, "Marignana")
+
         # inprr * 1000 : from m to mm
         contourf = precip_map.plot_contourf(
             inprr * 1000, cmap=cmap, levels=np.linspace(0, 160, 100)
@@ -112,7 +114,7 @@ def plot_precip_acprr(mesonh: MesoNH, precip_map : Map, resol_dx : int):
 if __name__ == "__main__":
     reader = get_mesonh(250)
     my_map = Map(reader.longitude + LON_OFFSET[250], reader.latitude + LAT_OFFSET[250])
-    plot_precip_inprr(reader, my_map, resol_dx=250, stations=True)
+    plot_precip_inprr(reader, my_map, resol_dx=250)
 
     # reader = get_mesonh(500)
     # my_map = Map(reader.longitude, reader.latitude)

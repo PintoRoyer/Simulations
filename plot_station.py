@@ -257,13 +257,13 @@ def plot_wind(name: str):
 
     axes = plt.subplots(figsize=(8, 5), layout="compressed")[1]
 
-    for resol_dx in (1000, ):
+    for resol_dx in (250, ):
         taïtôl = f"Vent {name.title()} DX = {resol_dx} m"
         print(f"{taïtôl}\n" + len(taïtôl) * "-")
 
         mean, std = get_wind10(lon, lat, resol_dx)
         axes.errorbar(
-            np.arange(5, 10.1, 0.1),
+            range(51),
             mean,
             yerr=std,
             fmt="o",
@@ -272,23 +272,25 @@ def plot_wind(name: str):
 
         mean, std = get_wind10(lon - LON_OFFSET[resol_dx], lat - LAT_OFFSET[resol_dx], resol_dx)
         axes.errorbar(
-            np.arange(5, 10.1, 0.1),
+            range(51),
             mean,
             yerr=std,
             fmt="o",
-            label=f"Simulation décalée\nDX = {resol_dx} m"
+            label=f"Simulation recalée\nDX = {resol_dx} m"
         )
 
-    data = pd.read_csv(f"../Donnees/stations/{name}.csv", delimiter=";")
-    axes.plot((data["heure"] - 2)[6: 14], data["vent"][6: 14], label=f"{name.title()}")
+    data = pd.read_csv(f"../Donnees/stations/{name}_station_20220818.csv", delimiter=";")
+    axes.plot(range(51), data["wind_spd"][70: 121], "o", label=f"{name.title()}")
     axes.grid("on")
 
+    axes.set_xticks(range(0, 51, 5), data["time (local)"].values[50: 101: 5])
     axes.set_xlabel("Heure (TU)")
     axes.set_ylabel("Vitesse du vent (km/h)")
     axes.grid("on")
 
     plt.legend()
-    plt.savefig(f"{name}_wind_{resol_dx}m.png")
+    plt.show()
+    # plt.savefig(f"{name}_wind_{resol_dx}m.png")
 
 
 def plot_pressure(name: str):
@@ -335,7 +337,7 @@ def plot_pressure(name: str):
             mean,
             yerr=std,
             fmt="o",
-            label=f"Simulation décalée\nDX = {resol_dx} m"
+            label=f"Simulation recalée\nDX = {resol_dx} m"
         )
 
     data = pd.read_csv(f"../Donnees/stations/{name}.csv", delimiter=";")
@@ -351,6 +353,4 @@ def plot_pressure(name: str):
 
 
 if __name__ == "__main__":
-    for name in list(get_all_stations().keys()):
-        plot_wind(name)
-        plot_pressure(name)
+    show_stations()

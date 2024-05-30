@@ -89,4 +89,4 @@ if __name__ == "__main__":
     )
     my_map = Map(reader.longitude, reader.latitude)
     reader.get_data(6)
-    plot_antilope(6, reader, my_map, zoom="mesonh", stations=True)
+    plot_antilope(6, reader, my_map, zoom="mesonh")

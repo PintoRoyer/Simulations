@@ -101,7 +101,7 @@ def plot_all_clouds(mesonh : MesoNH, clouds_map : Map, time_index, resol_dx : in
         "Couverture nuageuse"
     )
     
-    plt.savefig(f"clouds_{resol_dx}m.png")
+    plt.savefig(f"clouds_{resol_dx}m_5.png")
 
 
 
