@@ -15,35 +15,24 @@ Create a reader class
 ---------------------
 To create a reader class, you should have the following attributes:
 
-* files: the list of files
+* files     : the list of files
 
-* data: the current open file
+* data      : the current open file
 
-* longitude: the longitude of the measures
+* longitude : the longitude of the measures
 
-* latitude: the latitude of the measures
+* latitude  : the latitude of the measures
 
 and the following methods:
 
 * get_data(file_index: int) to open a file
 
-* get_var(*varnames, func: callable = lambda x: x) to get a variable
+* get_var(*varnames, func: Callable = lambda x: x) to get a variable
 
-* get_limits(*varnames, func: callable = lambda x: x) to get the min and max of a variable
-
-Classes
--------
-MesoNH
-Antilope
-Satellite
-
-Functions
----------
-get_mesonh
-get_index
-index_to_lonlat
-lonlat_to_index
+* get_limits(*varnames, func: Callable = lambda x: x) to get the min and max of a variable
 """
+
+from collections.abc import Callable, Iterable
 
 import numpy as np
 from netCDF4 import Dataset
@@ -76,8 +65,8 @@ class MesoNH:
 
     def get_data(self, file_index: int):
         """
-        Open the file corresponding to the given ``file_index``. The
-        ``Dataset`` object is stored into ``MesoNH.data``.
+        Open the file corresponding to the given file_index. The
+        Dataset object is stored into MesoNH.data.
 
         Parameters
         ----------
@@ -86,22 +75,22 @@ class MesoNH:
         """
         self.data = Dataset(self.files[file_index])
 
-    def get_var(self, *varnames, func: callable = lambda x: x):
+    def get_var(self, *varnames, func: Callable = lambda x: x):
         """
-        Returns the NumPy array corresponding to result given by ``func`` applied on the given
+        Returns the NumPy array corresponding to result given by func applied on the given
         variables.
 
         Parameters
         ----------
         varnames : str
-            Variable names to give to ``func``.
-        func : callable, keyword-only, optionnal
+            Variable names to give to func.
+        func : Callable, keyword-only, optionnal
             The function to apply to the given variables.
 
         Returns
         -------
         out : np.array
-            The result given by ``func``.
+            The result given by func.
         """
         args = []
         for varname in varnames:
@@ -114,7 +103,7 @@ class MesoNH:
         index_i: int,
         index_j: int,
         *varnames,
-        func: callable = lambda x: x,
+        func: Callable = lambda x: x,
         t_range: iter = None,
         size: int = 1,
     ):
@@ -133,15 +122,15 @@ class MesoNH:
         index_j : int
             The index on the y-axis
         varnames : str
-            Variable names to give to ``func``.
-        func : callable, keyword-only, optionnal
+            Variable names to give to func.
+        func : Callable, keyword-only, optionnal
             The function to apply to the given variables.
         t_range : iter, keyword-only, optionnal
             The temporal range over wich the average is to be calculated. By default all the
             available time interval will be taken.
-            You can give a ``range`` or the list of the index you want.
+            You can give a range or the list of the index you want.
         size : int, keyword-only, optionnal
-            The size of the spatial average in index. By default it's set on ``1``, so the average
+            The size of the spatial average in index. By default it's set on 1, so the average
             will be calculated of the given case and over the cases around in the four
             directions:
 
@@ -175,17 +164,15 @@ class MesoNH:
             array = func(*args)
             array = array[index_j - size : index_j + size, index_i - size : index_i + size]
 
-            if var_min > array.min():
-                var_min = array.min()
-            if var_max < array.max():
-                var_max = array.max()
+            var_min = min(var_min, array.min())
+            var_max = max(var_max, array.max())
 
             mean_per_timestep.append(np.mean(array))
             std_per_timestep.append(np.std(array))
 
         return (var_min, var_max), np.mean(mean_per_timestep), np.mean(std_per_timestep)
 
-    def get_limits(self, *varnames, func: callable = lambda x: x):
+    def get_limits(self, *varnames, func: Callable = lambda x: x):
         """
         Search min and max of a given variable.
 
@@ -193,7 +180,7 @@ class MesoNH:
         ----------
         varnames : str
             The names of the variables.
-        func : callable, keyword-only, optionnal
+        func : Callable, keyword-only, optionnal
             The function to apply to the given variables.
 
         Returns
@@ -214,11 +201,8 @@ class MesoNH:
             current_min = result.min()
             current_max = result.max()
 
-            if current_min < var_min:
-                var_min = current_min
-
-            if current_max > var_max:
-                var_max = current_max
+            var_min = min(var_min, current_min)
+            var_max = max(var_max, current_max)
 
         return var_min, var_max
 
@@ -253,8 +237,8 @@ class Antilope:
 
     def get_data(self, file_index: int):
         """
-        Open the file corresponding to the given ``file_index``. The
-        ``Dataset`` object is stored into ``Antilope.data``.
+        Open the file corresponding to the given file_index. The
+        Dataset object is stored into Antilope.data.
 
         Parameters
         ----------
@@ -263,22 +247,22 @@ class Antilope:
         """
         self.data = Dataset(self.files[file_index])
 
-    def get_var(self, *varnames, func: callable = lambda x: x):
+    def get_var(self, *varnames, func: Callable = lambda x: x):
         """
-        Returns the NumPy array corresponding to result given by ``func`` applied on the given
+        Returns the NumPy array corresponding to result given by func applied on the given
         variables.
 
         Parameters
         ----------
         varnames : str
             The names of the variables.
-        func : callable, keyword-only, optionnal
+        func : Callable, keyword-only, optionnal
             The function to apply to the given variables.
 
         Returns
         -------
         out : np.array
-            The result given by ``func``.
+            The result given by func.
         """
         args = []
         for varname in varnames:
@@ -286,7 +270,7 @@ class Antilope:
 
         return func(*args)
 
-    def get_limits(self, *varnames, func: callable = lambda x: x):
+    def get_limits(self, *varnames, func: Callable = lambda x: x):
         """
         Search min and max of a given variable.
 
@@ -294,7 +278,7 @@ class Antilope:
         ----------
         varnames : str
             The names of the variables.
-        func : callable, keyword-only, optionnal
+        func : Callable, keyword-only, optionnal
             The function to apply to the given variables.
 
         Returns
@@ -315,11 +299,8 @@ class Antilope:
             current_min = result.min()
             current_max = result.max()
 
-            if current_min < var_min:
-                var_min = current_min
-
-            if current_max > var_max:
-                var_max = current_max
+            var_min = min(var_min, current_min)
+            var_max = max(var_max, current_max)
 
         return var_min, var_max
 
@@ -354,8 +335,8 @@ class Satellite:
 
     def get_data(self, file_index: int):
         """
-        Open the file corresponding to the given ``file_index``. The
-        ``Dataset`` object is stored into ``Satellite.data``.
+        Open the file corresponding to the given file_index. The
+        Dataset object is stored into Satellite.data.
 
         Parameters
         ----------
@@ -364,22 +345,22 @@ class Satellite:
         """
         self.data = Dataset(self.files[file_index])
 
-    def get_var(self, *varnames, func: callable = lambda x: x):
+    def get_var(self, *varnames, func: Callable = lambda x: x):
         """
-        Returns the NumPy array corresponding to result given by ``func`` applied on the given
+        Returns the NumPy array corresponding to result given by func applied on the given
         variables.
 
         Parameters
         ----------
         varnames : str
             The names of the variables.
-        func : callable, keyword-only, optionnal
+        func : Callable, keyword-only, optionnal
             The function to apply to the given variables.
 
         Returns
         -------
         out : np.array
-            The result given by ``func``.
+            The result given by func.
         """
         args = []
         for varname in varnames:
@@ -387,7 +368,7 @@ class Satellite:
 
         return func(*args)
 
-    def get_limits(self, *varnames, func: callable = lambda x: x):
+    def get_limits(self, *varnames, func: Callable = lambda x: x):
         """
         Search min and max of a given variable.
 
@@ -395,7 +376,7 @@ class Satellite:
         ----------
         varnames : str
             The names of the variables.
-        func : callable, keyword-only, optionnal
+        func : Callable, keyword-only, optionnal
             The function to apply to the given variables.
 
         Returns
@@ -416,11 +397,8 @@ class Satellite:
             current_min = result.min()
             current_max = result.max()
 
-            if current_min < var_min:
-                var_min = current_min
-
-            if current_max > var_max:
-                var_max = current_max
+            var_min = min(var_min, current_min)
+            var_max = max(var_max, current_max)
 
         return var_min, var_max
 
@@ -434,7 +412,7 @@ def get_mesonh(resolution_dx: int, path: str = "../Donnees/"):
     resolution_dx : int
         The wanted resolution.
     path : str, optionnal
-        The path of the netCDF files. By default it's set on ``../Donnees/``.
+        The path of the netCDF files. By default it's set on ../Donnees/.
 
     Returns
     -------
@@ -447,22 +425,22 @@ def get_mesonh(resolution_dx: int, path: str = "../Donnees/"):
     return MesoNH(files)
 
 
-def get_index(array: np.array, target):
+def get_index(array: np.array, target: float):
     """
-    Search and return the index of the value closest to ``target`` in the given array. This function
+    Search and return the index of the value closest to target in the given array. This function
     can handle n-dimensionnal arrays.
 
     Parameters
     ----------
     array : np.array
         The array in which to search.
-    target
-        The value to search in ``array``.
+    target : float
+        The value to search in array.
 
     Returns
     -------
     out : np.array
-        The index of the value closest to ``target`` in ``array``. If seraval indexes matche, it
+        The index of the value closest to target in array. If seraval indexes matche, it
         only returns the first one.
     """
     delta = np.abs(target - array)
@@ -470,8 +448,25 @@ def get_index(array: np.array, target):
     return index[:, 0]
 
 
-def get_index_from_vect(x_array, y_array, value):
-    norms = np.sqrt((x_array - value[0])**2 + (y_array - value[1])**2)
+def get_index_from_vect(x_array: np.array, y_array: np.array, value: Iterable[float, float]):
+    """
+    Search for the given vector value in the x and y-array.
+
+    Parameters
+    ----------
+    x_array : np.array
+        The components on the x-axis.
+    y_array : np.array
+        The components on the y-axis.
+    value : Iterable[float, float]
+        The vector to search for.
+
+    Returns
+    -------
+    out : np.array
+        The index on x- and y-axis.
+    """
+    norms = np.sqrt((x_array - value[0]) ** 2 + (y_array - value[1]) ** 2)
     index = np.array(np.where(norms == norms.min()))
     return index[:, 0]
 
@@ -484,16 +479,16 @@ def index_to_lonlat(reader, i: int, j: int):
     ----------
     reader
         An instance of reader.
-    i_lim : tuple
-        The limit indexes on x-axis.
-    j_lim : tuple
-        The limit indexes on y-axis.
+    i : innt
+        The index on x-axis.
+    j : int
+        The index on y-axis.
 
     Returns
     -------
     out : tuple
-        A tuple that contains two tuples: ``(longitude_min, longitude_max)`` and
-        ``(latitude_min, latitude_max)``.
+        A tuple that contains two tuples: (longitude_min, longitude_max) and
+        (latitude_min, latitude_max).
     """
     lon = reader.longitude[j, i]
     lat = reader.latitude[j, i]
@@ -511,17 +506,17 @@ def lonlat_to_index(reader, lon: float, lat: float):
     ----------
     reader
         An instance of reader.
-    lon_lim : tuple
-        The limit indexes on longitude.
-    lat_lim : tuple
-        The limit indexes on latitude.
+    lon : tuple
+        The longitude to search.
+    lat : tuple
+        The latitude to search.
 
     Returns
     -------
     out : tuple
-        A tuple that contains two tuples: ``(i_min, i_max)`` and ``(j_min, j_max)``.
+        A tuple that contains two elements: (i, j).
     """
-    j, i =  get_index_from_vect(reader.longitude, reader.latitude, (lon, lat))
+    j, i = get_index_from_vect(reader.longitude, reader.latitude, (lon, lat))
     return i, j
 
 

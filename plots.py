@@ -6,24 +6,17 @@ Description
 -----------
 This module provides some classes to plot several types of graphs from netcdf files. Different types
 of intern organization can be managed throught a reader class.
-
-Classes
--------
-Map
-TemporalProfile
 """
 
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
 
 class Map:
     """
-    This class provides some minimum functions to plot ``contourf``, ``contour`` and ``quiver`` on a
-    map.
+    This class provides some minimum functions to plot contourf, contour and quiver on a map.
 
     Attributes
     ----------
@@ -112,13 +105,13 @@ class Map:
         kwargs
             These keyword arguments will be given to ``axes.text``.
 
-        Return
-        ------
+        Returns
+        -------
         title : plt.Text
             The Text instance.
 
-        Example
-        -------
+        Exemples
+        --------
         This method can be used as follow:
 
             my_map.set_title(
@@ -203,7 +196,7 @@ class Map:
             These keywords arguments will be given to ``axes.quiver``.
 
         Returns
-        ------
+        -------
         quiver : plt.Quiver
             The added quiver.
         """
