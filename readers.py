@@ -542,4 +542,3 @@ def get_time_index(hour: int, minute: int):
         The index of the file corresponding to the given timestamp.
     """
     return (hour - 4) * 60 + (minute - 1)
-

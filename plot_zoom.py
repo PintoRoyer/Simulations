@@ -177,11 +177,13 @@ def plot_zoom_on_axes(lon, lat, hour, minute):
 
     # clouds
     fig, axes = plt.subplots(1, 3, figsize=(24, 5), layout="compressed", subplot_kw={"projection": ccrs.PlateCarree()})
+
+
     
     for index, resol_dx in enumerate((250, 500, 1000)):
         geoaxes = my_map.init_axes(
             axes[index],
-            feature_kw={"linewidth": 1, "alpha": 0.5, "color": "white"}
+            feature_kw={"color": "black"}
         )[1]
         geoaxes.set_extent([lon[0], lon[1], lat[0], lat[1]])
         geoaxes.set_title(f"DX = {resol_dx} m")
@@ -191,16 +193,55 @@ def plot_zoom_on_axes(lon, lat, hour, minute):
         my_map.longitude = mesonh.longitude
         my_map.latitude = mesonh.latitude
 
-        var = mesonh.get_var("THCW", "THRW", "THIC", "THSN", "THGR", func=sum_clouds)
+        axes[index].set_extent([lon[0], lon[1], lat[0], lat[1]])
+        var = mesonh.get_var("WIND10", func=lambda x: x * 3.6)
         contourf = my_map.plot_contourf(
             var,
-            cmap=LinearSegmentedColormap.from_list("cmap2", ["black", "white", "blue", "red"]),
-            levels=np.linspace(lim["clouds"][0], lim["clouds"][1], 100),
+            cmap=LinearSegmentedColormap.from_list(
+                "cmap2",
+                [
+                    "white",
+                    (240 / 255, 248 / 255, 255 / 255),
+                    "darkcyan",
+                    "yellow",
+                    "orange",
+                    "red",
+                    "purple",
+                    "black",
+                ],
+            ),
+            levels=np.linspace(lim["wind"][0], lim["wind"][1], 100),
         )
-    
-    cbar = plt.colorbar(contourf, label="Épaisseur nuageuse (mm)")
-    cbar.set_ticks(np.linspace(lim["clouds"][0], lim["clouds"][1], 8))
-            
+
+        # Wind direction
+        if i_lim == (0, -1):
+            kwargs = {"scale" : 40}
+                
+        else:
+            mesh = 25
+            if resol_dx == 500:
+                mesh = 12
+            elif resol_dx == 1000:
+                mesh = 6
+            kwargs = {
+                "x_mesh": mesh,
+                "y_mesh": mesh,
+                "width": 0.005,
+                "scale": 20,
+                "scale_units": "xy",
+                "units": "xy"
+            }
+
+        wind_u, wind_v = mesonh.get_var("UM10", "VM10", "WIND10", func=norm_wind)
+        my_map.plot_quiver(
+            wind_u,
+            wind_v,
+            **kwargs
+        )
+
+    cbar = plt.colorbar(contourf, label="Vitesse du vent horizontal (km/h)")
+    cbar.set_ticks(np.linspace(lim["wind"][0], lim["wind"][1], 8))
+
     plt.show()
     # plt.savefig(f"wind_{time}_{zoom}.png")
 

@@ -353,4 +353,4 @@ def plot_pressure(name: str):
 
 
 if __name__ == "__main__":
-    show_stations()
+    show_station("marignana")
